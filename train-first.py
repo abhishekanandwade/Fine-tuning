@@ -2,9 +2,9 @@ import json
 import subprocess
 import torch
 from datasets import Dataset
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from trl import SFTTrainer, SFTConfig
 from peft import get_peft_model, LoraConfig, TaskType, AutoPeftModelForCausalLM
-from trl import SFTTrainer
 
 
 # -------------------------------
@@ -84,12 +84,12 @@ def load_model():
 def train(model, tokenizer, dataset, max_seq_length):
     trainer = SFTTrainer(
         model=model,
-        tokenizer=tokenizer,
+        processing_class=tokenizer,
         train_dataset=dataset,
-        dataset_text_field="text",
-        max_seq_length=max_seq_length,
-        dataset_num_proc=2,
-        args=TrainingArguments(
+        args=SFTConfig(
+            dataset_text_field="text",
+            max_length=max_seq_length,
+            dataset_num_proc=2,
             per_device_train_batch_size=2,
             gradient_accumulation_steps=4,
             gradient_checkpointing=True,
@@ -118,21 +118,23 @@ def train(model, tokenizer, dataset, max_seq_length):
 # -------------------------------
 def test_model(model, tokenizer):
     model.config.use_cache = True  # re-enable KV-cache for inference
+    dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
+    model = model.to(dtype)
     model.eval()
 
     messages = [
         {"role": "user", "content": "Extract product info:\n<div class='product'><h2>iPad Air</h2><span class='price'>$1344</span></div>"}
     ]
 
-    inputs = tokenizer.apply_chat_template(
+    text = tokenizer.apply_chat_template(
         messages,
-        tokenize=True,
+        tokenize=False,
         add_generation_prompt=True,
-        return_tensors="pt",
-    ).to("cuda")
+    )
+    inputs = tokenizer(text, return_tensors="pt").to("cuda")
 
     outputs = model.generate(
-        input_ids=inputs,
+        **inputs,
         max_new_tokens=256,
         temperature=0.7,
         do_sample=True,
