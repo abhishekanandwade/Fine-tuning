@@ -147,13 +147,14 @@ def test_model(model, tokenizer):
 # -------------------------------
 # 6. Merge adapter and export to GGUF
 # -------------------------------
-def export_to_gguf(adapter_dir="fine_tuned_model", output_gguf="fine_tuned_model.gguf"):
-    merged_dir = "merged_model"
+def export_to_gguf(adapter_dir="fine_tuned_model", output_gguf="/dev/shm/fine_tuned_model_q4.gguf"):
+    import shutil
+    merged_dir = "/dev/shm/merged_model"
 
     print("Merging LoRA adapter into base model...")
     merged_model = AutoPeftModelForCausalLM.from_pretrained(
         adapter_dir,
-        torch_dtype=torch.float16,
+        dtype=torch.float16,
         device_map="auto",
     )
     merged_model = merged_model.merge_and_unload()
@@ -161,18 +162,34 @@ def export_to_gguf(adapter_dir="fine_tuned_model", output_gguf="fine_tuned_model
 
     tokenizer = AutoTokenizer.from_pretrained(adapter_dir)
     tokenizer.save_pretrained(merged_dir)
+
+    # Fix tokenizer_config.json extra_special_tokens type mismatch
+    import json as _json
+    tc_path = f"{merged_dir}/tokenizer_config.json"
+    with open(tc_path) as f:
+        tc = _json.load(f)
+    if isinstance(tc.get("extra_special_tokens"), list):
+        tc["extra_special_tokens"] = {}
+        with open(tc_path, "w") as f:
+            _json.dump(tc, f, indent=2)
+
     print(f"Merged model saved to: {merged_dir}")
 
-    print("Converting merged model to GGUF...")
+    print("Converting directly to Q4_0 GGUF (~4.5GB)...")
     subprocess.run(
         [
-            "python", "llama.cpp/convert_hf_to_gguf.py", merged_dir,
+            "python", "/workspace/llama.cpp/convert_hf_to_gguf.py", merged_dir,
             "--outfile", output_gguf,
-            "--outtype", "f16",
+            "--outtype", "q4_0",
         ],
         check=True,
     )
-    print(f"GGUF model saved to: {output_gguf}")
+
+    # Free ~15GB of RAM after GGUF is written
+    print("Removing merged safetensors to free space...")
+    shutil.rmtree(merged_dir)
+
+    print(f"Quantized GGUF saved to: {output_gguf}")
 
 
 # -------------------------------
@@ -196,7 +213,7 @@ def main():
     model.save_pretrained("fine_tuned_model")
     tokenizer.save_pretrained("fine_tuned_model")
 
-    export_to_gguf("fine_tuned_model", "fine_tuned_model.gguf")
+    export_to_gguf("fine_tuned_model", "/dev/shm/fine_tuned_model_q4.gguf")
 
 
 if __name__ == "__main__":
