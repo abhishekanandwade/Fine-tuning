@@ -1,0 +1,1717 @@
+{
+  "Issues": [
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `resp.Body.Close` is not checked",
+      "Severity": "",
+      "SourceLines": ["\tdefer resp.Body.Close()"],
+      "Pos": {
+        "Filename": "handler\\integrationcbsapi.go",
+        "Offset": 12885,
+        "Line": 345,
+        "Column": 23
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `sftpClient.Close` is not checked",
+      "Severity": "",
+      "SourceLines": ["\tdefer sftpClient.Close()"],
+      "Pos": {
+        "Filename": "handler\\integrationcprcsftpapi.go",
+        "Offset": 2250,
+        "Line": 76,
+        "Column": 24
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `remoteFile.Close` is not checked",
+      "Severity": "",
+      "SourceLines": ["\t\t\tdefer remoteFile.Close()"],
+      "Pos": {
+        "Filename": "handler\\integrationcprcsftpapi.go",
+        "Offset": 4513,
+        "Line": 138,
+        "Column": 26
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `remoteFile.Close` is not checked",
+      "Severity": "",
+      "SourceLines": ["\t\t\tdefer remoteFile.Close()"],
+      "Pos": {
+        "Filename": "handler\\integrationcprcsftpapi.go",
+        "Offset": 11821,
+        "Line": 321,
+        "Column": 26
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `remoteFile.Close` is not checked",
+      "Severity": "",
+      "SourceLines": ["\t\t\tdefer remoteFile.Close()"],
+      "Pos": {
+        "Filename": "handler\\integrationcprcsftpapi.go",
+        "Offset": 13045,
+        "Line": 354,
+        "Column": 26
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `resp.Body.Close` is not checked",
+      "Severity": "",
+      "SourceLines": ["\tdefer resp.Body.Close()"],
+      "Pos": {
+        "Filename": "handler\\integrationippbapi.go",
+        "Offset": 13183,
+        "Line": 252,
+        "Column": 23
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `file.Close` is not checked",
+      "Severity": "",
+      "SourceLines": [
+        "\tdefer file.Close() // Ensure the file is closed after use"
+      ],
+      "Pos": {
+        "Filename": "handler\\miniofilemgmt.go",
+        "Offset": 3401,
+        "Line": 105,
+        "Column": 18
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `gctx.Request.MultipartForm.RemoveAll` is not checked",
+      "Severity": "",
+      "SourceLines": [
+        "\tdefer gctx.Request.MultipartForm.RemoveAll() // Clean up temporary files"
+      ],
+      "Pos": {
+        "Filename": "handler\\miniofilemgmt.go",
+        "Offset": 3977,
+        "Line": 125,
+        "Column": 44
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `obj.Close` is not checked",
+      "Severity": "",
+      "SourceLines": [
+        "\tdefer obj.Close() // Ensure the object is closed after use"
+      ],
+      "Pos": {
+        "Filename": "handler\\miniofilemgmt.go",
+        "Offset": 6980,
+        "Line": 202,
+        "Column": 17
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `conn.Close` is not checked",
+      "Severity": "",
+      "SourceLines": ["\t\tconn.Close() // Close SSH connection if SFTP fails"],
+      "Pos": {
+        "Filename": "handler\\sftpclientcreation.go",
+        "Offset": 2070,
+        "Line": 70,
+        "Column": 13
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `s.Close` is not checked",
+      "Severity": "",
+      "SourceLines": ["\ts.Close()"],
+      "Pos": {
+        "Filename": "handler\\sftpclientcreation.go",
+        "Offset": 2618,
+        "Line": 91,
+        "Column": 9
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `resp.Body.Close` is not checked",
+      "Severity": "",
+      "SourceLines": ["\tdefer resp.Body.Close()"],
+      "Pos": {
+        "Filename": "handler\\temporal.go",
+        "Offset": 12807,
+        "Line": 290,
+        "Column": 23
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `finalBatchResults.Close` is not checked",
+      "Severity": "",
+      "SourceLines": ["\tdefer finalBatchResults.Close()"],
+      "Pos": {
+        "Filename": "repo\\postgres\\inventoryintegration.go",
+        "Offset": 6160,
+        "Line": 137,
+        "Column": 31
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `finalBatchResults.Close` is not checked",
+      "Severity": "",
+      "SourceLines": ["\tdefer finalBatchResults.Close()"],
+      "Pos": {
+        "Filename": "repo\\postgres\\inventoryintegration.go",
+        "Offset": 12136,
+        "Line": 245,
+        "Column": 31
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `finalBatchResults.Close` is not checked",
+      "Severity": "",
+      "SourceLines": ["\tdefer finalBatchResults.Close()"],
+      "Pos": {
+        "Filename": "repo\\postgres\\inventoryintegration.go",
+        "Offset": 15465,
+        "Line": 315,
+        "Column": 31
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `batchResults.Close` is not checked",
+      "Severity": "",
+      "SourceLines": ["\tdefer batchResults.Close()"],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnacctgdetails.go",
+        "Offset": 26049,
+        "Line": 551,
+        "Column": 26
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "errcheck",
+      "Text": "Error return value of `m.Close` is not checked",
+      "Severity": "",
+      "SourceLines": ["\tdefer m.Close()"],
+      "Pos": {
+        "Filename": "tests\\testmain_test.go",
+        "Offset": 4277,
+        "Line": 168,
+        "Column": 15
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "govet",
+      "Text": "structtag: struct field tag \"json:\\\"sent_details\\\" db:\\\"sent_details\\\" swaggertype:\\\"null.String\\\" \\n\\texample:\\\"[{\\\\\\\"keyname\\\\\\\":\\\\\\\"key1\\\\\\\",\\\\\\\"keyvalue\\\\\\\":\\\\\\\"keyvalue1\\\\\\\"},{\\\\\\\"keyname\\\\\\\":\\\\\\\"key2\\\\\\\",\\\\\\\"keyvalue\\\\\\\":\\\\\\\"keyvalue2\\\\\\\"}]\\\"\" not compatible with reflect.StructTag.Get: bad syntax for struct tag key",
+      "Severity": "",
+      "SourceLines": [
+        "\tSent_Details     json.RawMessage `json:\"sent_details\" db:\"sent_details\" swaggertype:\"null.String\" "
+      ],
+      "Pos": {
+        "Filename": "core\\domain\\reports.go",
+        "Offset": 3560,
+        "Line": 63,
+        "Column": 2
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "govet",
+      "Text": "structtag: struct field tag \"json:\\\"currency_details\\\" swaggertype:\\\"null.String\\\" \\n\\texample:\\\"[{\\\\\\\"keyname\\\\\\\":\\\\\\\"key1\\\\\\\",\\\\\\\"keyvalue\\\\\\\":\\\\\\\"keyvalue1\\\\\\\"},{\\\\\\\"keyname\\\\\\\":\\\\\\\"key2\\\\\\\",\\\\\\\"keyvalue\\\\\\\":\\\\\\\"keyvalue2\\\\\\\"}]\\\" db:\\\"currency_details\\\"\" not compatible with reflect.StructTag.Get: bad syntax for struct tag key",
+      "Severity": "",
+      "SourceLines": [
+        "\tCurrency_Details  []CurrencyDetails `json:\"currency_details\" swaggertype:\"null.String\" "
+      ],
+      "Pos": {
+        "Filename": "core\\domain\\reports.go",
+        "Offset": 5631,
+        "Line": 94,
+        "Column": 2
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "govet",
+      "Text": "structtag: struct field tag \"json:\\\"ipo_details\\\" db:\\\"ipo_details\\\" swaggertype:\\\"null.String\\\"\\n\\texample:\\\"[{\\\\\\\"keyname\\\\\\\":\\\\\\\"key1\\\\\\\",\\\\\\\"keyvalue\\\\\\\":\\\\\\\"keyvalue1\\\\\\\"},{\\\\\\\"keyname\\\\\\\":\\\\\\\"key2\\\\\\\",\\\\\\\"keyvalue\\\\\\\":\\\\\\\"keyvalue2\\\\\\\"}]\\\"\" not compatible with reflect.StructTag.Get: key:\"value\" pairs not separated by spaces",
+      "Severity": "",
+      "SourceLines": [
+        "\tIPO_Details     json.RawMessage `json:\"ipo_details\" db:\"ipo_details\" swaggertype:\"null.String\""
+      ],
+      "Pos": {
+        "Filename": "core\\domain\\reports.go",
+        "Offset": 10235,
+        "Line": 181,
+        "Column": 2
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "govet",
+      "Text": "structtag: struct field tag \"json:\\\"currency_details\\\" db:\\\"currency_details\\\" swaggertype:\\\"null.String\\\"\\n\\texample:\\\"[{\\\\\\\"keyname\\\\\\\":\\\\\\\"key1\\\\\\\",\\\\\\\"keyvalue\\\\\\\":\\\\\\\"keyvalue1\\\\\\\"},{\\\\\\\"keyname\\\\\\\":\\\\\\\"key2\\\\\\\",\\\\\\\"keyvalue\\\\\\\":\\\\\\\"keyvalue2\\\\\\\"}]\\\"\" not compatible with reflect.StructTag.Get: key:\"value\" pairs not separated by spaces",
+      "Severity": "",
+      "SourceLines": [
+        "\tCurrency_Details json.RawMessage `json:\"currency_details\" db:\"currency_details\" swaggertype:\"null.String\""
+      ],
+      "Pos": {
+        "Filename": "core\\domain\\txnstreasury.go",
+        "Offset": 5573,
+        "Line": 87,
+        "Column": 2
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "govet",
+      "Text": "printf: non-constant format string in call to fmt.Errorf",
+      "Severity": "",
+      "SourceLines": [
+        "\t\terr := fmt.Errorf(finacleXML.Body.ExecuteFinacleScriptResponse.CustomData.ErrMsgDesc)"
+      ],
+      "Pos": {
+        "Filename": "handler\\response\\integrationcbsapi.go",
+        "Offset": 4540,
+        "Line": 137,
+        "Column": 21
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Insert \"%s\" format string",
+          "TextEdits": [{ "Pos": 4540, "End": 4540, "NewText": "IiVzIiwg" }]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "govet",
+      "Text": "printf: non-constant format string in call to fmt.Errorf",
+      "Severity": "",
+      "SourceLines": [
+        "\t\terr := fmt.Errorf(finacleXML.Body.ExecuteFinacleScriptResponse.CustomData.ErrMsgDesc)"
+      ],
+      "Pos": {
+        "Filename": "handler\\response\\integrationcbsapi.go",
+        "Offset": 5313,
+        "Line": 159,
+        "Column": 21
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Insert \"%s\" format string",
+          "TextEdits": [{ "Pos": 5313, "End": 5313, "NewText": "IiVzIiwg" }]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "govet",
+      "Text": "printf: non-constant format string in call to fmt.Errorf",
+      "Severity": "",
+      "SourceLines": [
+        "\t\t\terr := fmt.Errorf(finacleXML.Body.ExecuteFinacleScriptResponse.CustomData.Response)"
+      ],
+      "Pos": {
+        "Filename": "handler\\response\\integrationippbapi.go",
+        "Offset": 6568,
+        "Line": 182,
+        "Column": 22
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Insert \"%s\" format string",
+          "TextEdits": [{ "Pos": 6568, "End": 6568, "NewText": "IiVzIiwg" }]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "ineffassign",
+      "Text": "ineffectual assignment to apiRes",
+      "Severity": "",
+      "SourceLines": ["\t\t\tapiRes = response.CbsApiAPIResponse{"],
+      "Pos": {
+        "Filename": "handler\\integrationcbsapi.go",
+        "Offset": 13442,
+        "Line": 366,
+        "Column": 4
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "ineffassign",
+      "Text": "ineffectual assignment to err",
+      "Severity": "",
+      "SourceLines": ["\tcurrentDateTime, err := GetCurrentDateTime()"],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnstampadvances.go",
+        "Offset": 4552,
+        "Line": 133,
+        "Column": 19
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "ineffassign",
+      "Text": "ineffectual assignment to reuuid",
+      "Severity": "",
+      "SourceLines": ["\treuuid = strings.TrimSuffix(reuuid, \",\")"],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnstreasurymisc.go",
+        "Offset": 40114,
+        "Line": 987,
+        "Column": 2
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "SA1012: do not pass a nil Context, even if a function permits it; pass context.TODO if you are unsure about which Context to use",
+      "Severity": "",
+      "SourceLines": ["\t\tlog.Warn(nil, \"Error: %v\", err)"],
+      "Pos": {
+        "Filename": "bootstrap\\bootstrapper.go",
+        "Offset": 9050,
+        "Line": 320,
+        "Column": 12
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Use context.TODO",
+          "TextEdits": [
+            { "Pos": 9050, "End": 9053, "NewText": "Y29udGV4dC5UT0RPKCk=" }
+          ]
+        },
+        {
+          "Message": "Use context.Background",
+          "TextEdits": [
+            {
+              "Pos": 9050,
+              "End": 9053,
+              "NewText": "Y29udGV4dC5CYWNrZ3JvdW5kKCk="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "SA1012: do not pass a nil Context, even if a function permits it; pass context.TODO if you are unsure about which Context to use",
+      "Severity": "",
+      "SourceLines": [
+        "\t\tlog.Info(nil, \"Info: Local Cache and Redis Cache are Initialized\")"
+      ],
+      "Pos": {
+        "Filename": "bootstrap\\bootstrapper.go",
+        "Offset": 9096,
+        "Line": 322,
+        "Column": 12
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Use context.TODO",
+          "TextEdits": [
+            { "Pos": 9096, "End": 9099, "NewText": "Y29udGV4dC5UT0RPKCk=" }
+          ]
+        },
+        {
+          "Message": "Use context.Background",
+          "TextEdits": [
+            {
+              "Pos": 9096,
+              "End": 9099,
+              "NewText": "Y29udGV4dC5CYWNrZ3JvdW5kKCk="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "SA1012: do not pass a nil Context, even if a function permits it; pass context.TODO if you are unsure about which Context to use",
+      "Severity": "",
+      "SourceLines": ["\t\tlog.Info(nil, \"Info: Redis Cache is disabled\")"],
+      "Pos": {
+        "Filename": "bootstrap\\bootstrapper.go",
+        "Offset": 9198,
+        "Line": 325,
+        "Column": 12
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Use context.TODO",
+          "TextEdits": [
+            { "Pos": 9198, "End": 9201, "NewText": "Y29udGV4dC5UT0RPKCk=" }
+          ]
+        },
+        {
+          "Message": "Use context.Background",
+          "TextEdits": [
+            {
+              "Pos": 9198,
+              "End": 9201,
+              "NewText": "Y29udGV4dC5CYWNrZ3JvdW5kKCk="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1008: could remove embedded field \"AcctData\" from selector",
+      "Severity": "",
+      "SourceLines": [
+        "\t\tfor i, entry := range cbsAPIRes.AcctData.RawEntries {"
+      ],
+      "Pos": {
+        "Filename": "handler\\integrationcbsapi.go",
+        "Offset": 13984,
+        "Line": 382,
+        "Column": 35
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Remove embedded field \"AcctData\" from selector",
+          "TextEdits": [{ "Pos": 13984, "End": 13993, "NewText": null }]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1003: could use tagged switch on req.Type",
+      "Severity": "",
+      "SourceLines": ["\tif req.Type == \"pdf\" {"],
+      "Pos": {
+        "Filename": "handler\\miniofilemgmt.go",
+        "Offset": 6356,
+        "Line": 182,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Replace with tagged switch",
+          "TextEdits": [
+            { "Pos": 6356, "End": 6356, "NewText": "c3dpdGNoIHJlcS5UeXBlIHsK" },
+            { "Pos": 6356, "End": 6378, "NewText": "Y2FzZSAicGRmIjo=" },
+            { "Pos": 6401, "End": 6408, "NewText": null },
+            { "Pos": 6408, "End": 6430, "NewText": "Y2FzZSAianBnIjo=" },
+            { "Pos": 6453, "End": 6460, "NewText": null },
+            { "Pos": 6460, "End": 6483, "NewText": "Y2FzZSAianBlZyI6" },
+            { "Pos": 6507, "End": 6514, "NewText": null },
+            { "Pos": 6514, "End": 6515, "NewText": "ZGVmYXVsdDo=" }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "S1009: should omit nil check; len() for nil slices is defined as zero",
+      "Severity": "",
+      "SourceLines": ["\tif resStrParts == nil || len(resStrParts) \u003c 2 {"],
+      "Pos": {
+        "Filename": "handler\\response\\integrationippbapi.go",
+        "Offset": 5874,
+        "Line": 168,
+        "Column": 5
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "SA1019: temporalnexus.NewSyncOperation is deprecated: Use nexus.NewSyncOperation and get the client via temporalnexus.GetClient ",
+      "Severity": "",
+      "SourceLines": [
+        "var TreasuryDayBeginOperation = temporalnexus.NewSyncOperation(contracts.TreasuryShiftBeginOperation, func(ctx context.Context, c client.Client, req contracts.TreasuryData /*input DeliveryInput */, options nexus.StartOperationOptions) (string, error) {"
+      ],
+      "Pos": {
+        "Filename": "handler\\temporal.go",
+        "Offset": 1802,
+        "Line": 61,
+        "Column": 33
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "SA1019: temporalnexus.NewSyncOperation is deprecated: Use nexus.NewSyncOperation and get the client via temporalnexus.GetClient ",
+      "Severity": "",
+      "SourceLines": [
+        "var TreasuryDayEndOperation = temporalnexus.NewSyncOperation(contracts.TreasuryShiftEndOperation, func(ctx context.Context, c client.Client, req contracts.TreasuryDayEndData /*input DeliveryInput */, options nexus.StartOperationOptions) (string, error) {"
+      ],
+      "Pos": {
+        "Filename": "handler\\temporal.go",
+        "Offset": 4283,
+        "Line": 116,
+        "Column": 31
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "SA1019: temporalnexus.NewSyncOperation is deprecated: Use nexus.NewSyncOperation and get the client via temporalnexus.GetClient ",
+      "Severity": "",
+      "SourceLines": [
+        "var UpdateTreasuryWalletOperation = temporalnexus.NewSyncOperation(contracts.SyncWalletService, func(ctx context.Context, c client.Client, req contracts.SyncWalletTreasuryInput /*input DeliveryInput */, options nexus.StartOperationOptions) (string, error) {"
+      ],
+      "Pos": {
+        "Filename": "handler\\temporal.go",
+        "Offset": 6434,
+        "Line": 167,
+        "Column": 37
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "ST1005: error strings should not be capitalized",
+      "Severity": "",
+      "SourceLines": [
+        "\t\t\t\treturn nil, errors.New(\"Insufficient balance\")"
+      ],
+      "Pos": {
+        "Filename": "handler\\temporal.go",
+        "Offset": 18698,
+        "Line": 435,
+        "Column": 17
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1008: could remove embedded field \"AcctData\" from selector",
+      "Severity": "",
+      "SourceLines": [
+        "\t\tfor i, entry := range cbsAPIRes.AcctData.RawEntries {"
+      ],
+      "Pos": {
+        "Filename": "handler\\temporal.go",
+        "Offset": 24675,
+        "Line": 614,
+        "Column": 35
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Remove embedded field \"AcctData\" from selector",
+          "TextEdits": [{ "Pos": 24675, "End": 24684, "NewText": null }]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1001: could apply De Morgan's law",
+      "Severity": "",
+      "SourceLines": [
+        "\t\tif !(strings.Contains(err.Error(), \"Opening balance details not available\") || strings.Contains(err.Error(), \"no rows in result set\")) {"
+      ],
+      "Pos": {
+        "Filename": "handler\\txnacctgdetails.go",
+        "Offset": 15546,
+        "Line": 308,
+        "Column": 6
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Apply De Morgan's law",
+          "TextEdits": [
+            {
+              "Pos": 15546,
+              "End": 15677,
+              "NewText": "KCFzdHJpbmdzLkNvbnRhaW5zKGVyci5FcnJvcigpLCAiT3BlbmluZyBiYWxhbmNlIGRldGFpbHMgbm90IGF2YWlsYWJsZSIpICYmICFzdHJpbmdzLkNvbnRhaW5zKGVyci5FcnJvcigpLCAibm8gcm93cyBpbiByZXN1bHQgc2V0Iikp"
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "S1021: should merge variable declaration with assignment on next line",
+      "Severity": "",
+      "SourceLines": ["\tvar Request domain.CancellationRequest"],
+      "Pos": {
+        "Filename": "handler\\txnacctgdetails.go",
+        "Offset": 22487,
+        "Line": 447,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Merge declaration with assignment",
+          "TextEdits": [
+            {
+              "Pos": 22487,
+              "End": 22742,
+              "NewText": "dmFyIFJlcXVlc3QgZG9tYWluLkNhbmNlbGxhdGlvblJlcXVlc3QgPSBkb21haW4uQ2FuY2VsbGF0aW9uUmVxdWVzdHsKCU9mZmljZUlEOiAgICAgICByZXEuT2ZmaWNlSUQsCglUcmFuc0RhdGU6ICAgICAgcmVxLlRyYW5zRGF0ZSwKCVVzZXJJRDogICAgICAgICByZXEuVXNlcklELAoJVXNlclJlbWFya3M6ICAgIHJlcS5Vc2VyUmVtYXJrcywKCVRyZWFzdXJ5VHJhbklEOiByZXEuVHJlYXN1cnlUcmFuSUQsCn0="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1003: could use tagged switch on req.Request_Type",
+      "Severity": "",
+      "SourceLines": ["\t\tif req.Request_Type == \"Remittance\" {"],
+      "Pos": {
+        "Filename": "handler\\txnstamps.go",
+        "Offset": 11997,
+        "Line": 253,
+        "Column": 3
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Replace with tagged switch",
+          "TextEdits": [
+            {
+              "Pos": 11997,
+              "End": 11997,
+              "NewText": "c3dpdGNoIHJlcS5SZXF1ZXN0X1R5cGUgewo="
+            },
+            {
+              "Pos": 11997,
+              "End": 12034,
+              "NewText": "Y2FzZSAiUmVtaXR0YW5jZSI6"
+            },
+            { "Pos": 12478, "End": 12485, "NewText": null },
+            { "Pos": 12485, "End": 12519, "NewText": "Y2FzZSAiUmVxdWVzdCI6" },
+            { "Pos": 12914, "End": 12921, "NewText": null },
+            { "Pos": 12921, "End": 12922, "NewText": "ZGVmYXVsdDo=" }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1003: could use tagged switch on req.RequestType",
+      "Severity": "",
+      "SourceLines": [
+        "\t\tif req.RequestType == \"Remittance\" || req.RequestType == \"Cheque Remittance\" {"
+      ],
+      "Pos": {
+        "Filename": "handler\\txnstreasury.go",
+        "Offset": 17400,
+        "Line": 341,
+        "Column": 3
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Replace with tagged switch",
+          "TextEdits": [
+            {
+              "Pos": 17400,
+              "End": 17400,
+              "NewText": "c3dpdGNoIHJlcS5SZXF1ZXN0VHlwZSB7Cg=="
+            },
+            {
+              "Pos": 17400,
+              "End": 17478,
+              "NewText": "Y2FzZSAiUmVtaXR0YW5jZSIsICJDaGVxdWUgUmVtaXR0YW5jZSI6"
+            },
+            { "Pos": 17990, "End": 17997, "NewText": null },
+            {
+              "Pos": 17997,
+              "End": 18069,
+              "NewText": "Y2FzZSAiUmVxdWVzdCIsICJDaGVxdWUgUmVxdWVzdCI6"
+            },
+            { "Pos": 18532, "End": 18539, "NewText": null },
+            { "Pos": 18539, "End": 18540, "NewText": "ZGVmYXVsdDo=" }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1004: could use strings.ReplaceAll instead",
+      "Severity": "",
+      "SourceLines": ["\tsql1 = strings.Replace(sql1, \"SELECT\", \"\", -1)"],
+      "Pos": {
+        "Filename": "repo\\postgres\\configoffices.go",
+        "Offset": 6748,
+        "Line": 181,
+        "Column": 9
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Use strings.ReplaceAll instead",
+          "TextEdits": [
+            { "Pos": 6748, "End": 6763, "NewText": "c3RyaW5ncy5SZXBsYWNlQWxs" },
+            { "Pos": 6784, "End": 6786, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "SA4009: argument ctx is overwritten before first use",
+      "Severity": "",
+      "SourceLines": [
+        "func (cr *DayBeginEndRepository) CheckDayBeginEndStatus(ctx context.Context, officeID uint64, TransDate string, dayBeginEnd string) (dayBeginEndCount int, err error) {"
+      ],
+      "Pos": {
+        "Filename": "repo\\postgres\\daybeginend.go",
+        "Offset": 9962,
+        "Line": 268,
+        "Column": 57
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "SA4009(related information): assignment to ctx",
+      "Severity": "",
+      "SourceLines": [
+        "\tctx, cancel := context.WithTimeout(context.Background(), cr.cfg.GetDuration(consts.QueryTimeOutLow))"
+      ],
+      "Pos": {
+        "Filename": "repo\\postgres\\daybeginend.go",
+        "Offset": 10076,
+        "Line": 269,
+        "Column": 2
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "SA4009: argument ctx is overwritten before first use",
+      "Severity": "",
+      "SourceLines": [
+        "func (cr *DayBeginEndRepository) CheckDayEndStatus(ctx context.Context, officeID uint64) (transDate string, err error) {"
+      ],
+      "Pos": {
+        "Filename": "repo\\postgres\\daybeginend.go",
+        "Offset": 10890,
+        "Line": 291,
+        "Column": 52
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "SA4009(related information): assignment to ctx",
+      "Severity": "",
+      "SourceLines": [
+        "\tctx, cancel := context.WithTimeout(context.Background(), cr.cfg.GetDuration(consts.QueryTimeOutLow))"
+      ],
+      "Pos": {
+        "Filename": "repo\\postgres\\daybeginend.go",
+        "Offset": 10962,
+        "Line": 292,
+        "Column": 2
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "SA4009: argument ctx is overwritten before first use",
+      "Severity": "",
+      "SourceLines": [
+        "func (car *CbsApiRepository) TemporalCheckIntegrationDataConsumptionFlags(ctx context.Context, req domain.GetIntegrationInfoReq) (domain.IntegrationFlags, error) {"
+      ],
+      "Pos": {
+        "Filename": "repo\\postgres\\integrationcbsapi.go",
+        "Offset": 6879,
+        "Line": 198,
+        "Column": 75
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "SA4009(related information): assignment to ctx",
+      "Severity": "",
+      "SourceLines": [
+        "\tctx, cancel := context.WithTimeout(context.Background(), car.cfg.GetDuration(consts.QueryTimeOutLow))"
+      ],
+      "Pos": {
+        "Filename": "repo\\postgres\\integrationcbsapi.go",
+        "Offset": 6971,
+        "Line": 199,
+        "Column": 2
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1003: could use tagged switch on officeType",
+      "Severity": "",
+      "SourceLines": [
+        "\tif officeType == \"PDN\" || officeType == \"RDN\" || officeType == \"ADN\" {"
+      ],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnacctgdetails.go",
+        "Offset": 18431,
+        "Line": 403,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Replace with tagged switch",
+          "TextEdits": [
+            {
+              "Pos": 18431,
+              "End": 18431,
+              "NewText": "c3dpdGNoIG9mZmljZVR5cGUgewo="
+            },
+            {
+              "Pos": 18431,
+              "End": 18501,
+              "NewText": "Y2FzZSAiUEROIiwgIlJETiIsICJBRE4iOg=="
+            },
+            { "Pos": 18664, "End": 18671, "NewText": null },
+            {
+              "Pos": 18671,
+              "End": 18741,
+              "NewText": "Y2FzZSAiSFBPIiwgIkdQTyIsICJDQlAiOg=="
+            },
+            { "Pos": 18891, "End": 18898, "NewText": null },
+            { "Pos": 18898, "End": 18899, "NewText": "ZGVmYXVsdDo=" }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1003: could use tagged switch on officeType",
+      "Severity": "",
+      "SourceLines": [
+        "\tif officeType == \"PDN\" || officeType == \"RDN\" || officeType == \"ADN\" {"
+      ],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnacctgdetails.go",
+        "Offset": 33164,
+        "Line": 769,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Replace with tagged switch",
+          "TextEdits": [
+            {
+              "Pos": 33164,
+              "End": 33164,
+              "NewText": "c3dpdGNoIG9mZmljZVR5cGUgewo="
+            },
+            {
+              "Pos": 33164,
+              "End": 33234,
+              "NewText": "Y2FzZSAiUEROIiwgIlJETiIsICJBRE4iOg=="
+            },
+            { "Pos": 33397, "End": 33404, "NewText": null },
+            {
+              "Pos": 33404,
+              "End": 33474,
+              "NewText": "Y2FzZSAiSFBPIiwgIkdQTyIsICJDQlAiOg=="
+            },
+            { "Pos": 33624, "End": 33624, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1003: could use tagged switch on ipoTxn.Request_Type.String",
+      "Severity": "",
+      "SourceLines": ["\tif ipoTxn.Request_Type.String == \"Request\" {"],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnsipos.go",
+        "Offset": 1584,
+        "Line": 60,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Replace with tagged switch",
+          "TextEdits": [
+            {
+              "Pos": 1584,
+              "End": 1584,
+              "NewText": "c3dpdGNoIGlwb1R4bi5SZXF1ZXN0X1R5cGUuU3RyaW5nIHsK"
+            },
+            { "Pos": 1584, "End": 1628, "NewText": "Y2FzZSAiUmVxdWVzdCI6" },
+            { "Pos": 1798, "End": 1805, "NewText": null },
+            { "Pos": 1805, "End": 1852, "NewText": "Y2FzZSAiUmVtaXR0YW5jZSI6" },
+            { "Pos": 2021, "End": 2021, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1003: could use tagged switch on ipoTxn.Request_Type.String",
+      "Severity": "",
+      "SourceLines": ["\tif ipoTxn.Request_Type.String == \"Request\" {"],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnsipos.go",
+        "Offset": 3163,
+        "Line": 103,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Replace with tagged switch",
+          "TextEdits": [
+            {
+              "Pos": 3163,
+              "End": 3163,
+              "NewText": "c3dpdGNoIGlwb1R4bi5SZXF1ZXN0X1R5cGUuU3RyaW5nIHsK"
+            },
+            { "Pos": 3163, "End": 3207, "NewText": "Y2FzZSAiUmVxdWVzdCI6" },
+            { "Pos": 3288, "End": 3295, "NewText": null },
+            { "Pos": 3295, "End": 3342, "NewText": "Y2FzZSAiUmVtaXR0YW5jZSI6" },
+            { "Pos": 3433, "End": 3433, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "ST1023: should omit type int from declaration; it will be inferred from the right-hand side",
+      "Severity": "",
+      "SourceLines": ["\t\tvar count int = 0"],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnsiposerror.go",
+        "Offset": 8614,
+        "Line": 217,
+        "Column": 13
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Remove redundant type",
+          "TextEdits": [{ "Pos": 8614, "End": 8617, "NewText": null }]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1003: could use tagged switch on stampTxn.Request_Type.String",
+      "Severity": "",
+      "SourceLines": ["\tif stampTxn.Request_Type.String == \"Request\" {"],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnsstamps.go",
+        "Offset": 23593,
+        "Line": 611,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Replace with tagged switch",
+          "TextEdits": [
+            {
+              "Pos": 23593,
+              "End": 23593,
+              "NewText": "c3dpdGNoIHN0YW1wVHhuLlJlcXVlc3RfVHlwZS5TdHJpbmcgewo="
+            },
+            { "Pos": 23593, "End": 23639, "NewText": "Y2FzZSAiUmVxdWVzdCI6" },
+            { "Pos": 23819, "End": 23826, "NewText": null },
+            {
+              "Pos": 23826,
+              "End": 23875,
+              "NewText": "Y2FzZSAiUmVtaXR0YW5jZSI6"
+            },
+            { "Pos": 24054, "End": 24054, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1003: could use tagged switch on stampTxn.Request_Type.String",
+      "Severity": "",
+      "SourceLines": ["\tif stampTxn.Request_Type.String == \"Request\" {"],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnsstamps.go",
+        "Offset": 25147,
+        "Line": 655,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Replace with tagged switch",
+          "TextEdits": [
+            {
+              "Pos": 25147,
+              "End": 25147,
+              "NewText": "c3dpdGNoIHN0YW1wVHhuLlJlcXVlc3RfVHlwZS5TdHJpbmcgewo="
+            },
+            { "Pos": 25147, "End": 25193, "NewText": "Y2FzZSAiUmVxdWVzdCI6" },
+            { "Pos": 25280, "End": 25287, "NewText": null },
+            {
+              "Pos": 25287,
+              "End": 25336,
+              "NewText": "Y2FzZSAiUmVtaXR0YW5jZSI6"
+            },
+            { "Pos": 25433, "End": 25433, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "S1021: should merge variable declaration with assignment on next line",
+      "Severity": "",
+      "SourceLines": ["\tvar stampSaleDetails map[string]int"],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnstampbulksales.go",
+        "Offset": 8717,
+        "Line": 223,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Merge declaration with assignment",
+          "TextEdits": [
+            {
+              "Pos": 8717,
+              "End": 8790,
+              "NewText": "dmFyIHN0YW1wU2FsZURldGFpbHMgbWFwW3N0cmluZ11pbnQgPSBzYnMuU2FsZV9EZXRhaWxz"
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1003: could use tagged switch on treasurytxns.Request_Type.String",
+      "Severity": "",
+      "SourceLines": [
+        "\tif treasurytxns.Request_Type.String == \"Cheque Request\" || treasurytxns.Request_Type.String == \"Bank Drawl\" {"
+      ],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnstreasury.go",
+        "Offset": 6378,
+        "Line": 135,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Replace with tagged switch",
+          "TextEdits": [
+            {
+              "Pos": 6378,
+              "End": 6378,
+              "NewText": "c3dpdGNoIHRyZWFzdXJ5dHhucy5SZXF1ZXN0X1R5cGUuU3RyaW5nIHsK"
+            },
+            {
+              "Pos": 6378,
+              "End": 6487,
+              "NewText": "Y2FzZSAiQ2hlcXVlIFJlcXVlc3QiLCAiQmFuayBEcmF3bCI6"
+            },
+            { "Pos": 7155, "End": 7162, "NewText": null },
+            {
+              "Pos": 7162,
+              "End": 7222,
+              "NewText": "Y2FzZSAiQ2hlcXVlIFJlbWl0dGFuY2UiOg=="
+            },
+            { "Pos": 7885, "End": 7885, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "ST1023: should omit type bool from declaration; it will be inferred from the right-hand side",
+      "Severity": "",
+      "SourceLines": ["\t\tvar bankDrawl bool = false"],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnstreasury.go",
+        "Offset": 6505,
+        "Line": 136,
+        "Column": 17
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Remove redundant type",
+          "TextEdits": [{ "Pos": 6505, "End": 6509, "NewText": null }]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1004: could use strings.ReplaceAll instead",
+      "Severity": "",
+      "SourceLines": [
+        "\tsqlStrings[0] = strings.Replace(sqlStrings[0], \"SELECT\", \"\", -1)"
+      ],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnstreasury.go",
+        "Offset": 79972,
+        "Line": 1768,
+        "Column": 18
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Use strings.ReplaceAll instead",
+          "TextEdits": [
+            {
+              "Pos": 79972,
+              "End": 79987,
+              "NewText": "c3RyaW5ncy5SZXBsYWNlQWxs"
+            },
+            { "Pos": 80017, "End": 80019, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1003: could use tagged switch on treasuryTxn.Request_Type.String",
+      "Severity": "",
+      "SourceLines": ["\tif treasuryTxn.Request_Type.String == \"Request\" {"],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnstreasury.go",
+        "Offset": 96084,
+        "Line": 2148,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Replace with tagged switch",
+          "TextEdits": [
+            {
+              "Pos": 96084,
+              "End": 96084,
+              "NewText": "c3dpdGNoIHRyZWFzdXJ5VHhuLlJlcXVlc3RfVHlwZS5TdHJpbmcgewo="
+            },
+            { "Pos": 96084, "End": 96133, "NewText": "Y2FzZSAiUmVxdWVzdCI6" },
+            { "Pos": 96332, "End": 96339, "NewText": null },
+            {
+              "Pos": 96339,
+              "End": 96391,
+              "NewText": "Y2FzZSAiUmVtaXR0YW5jZSI6"
+            },
+            { "Pos": 96594, "End": 96594, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1007: could merge conditional assignment into variable declaration",
+      "Severity": "",
+      "SourceLines": ["\tisRSAO := false"],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnstreasury.go",
+        "Offset": 97124,
+        "Line": 2180,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Merge conditional assignment into variable declaration",
+          "TextEdits": [
+            {
+              "Pos": 97134,
+              "End": 97139,
+              "NewText": "c3JjRERPSUQgIT0gZGVzdERET0lE"
+            },
+            { "Pos": 97142, "End": 97189, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1003: could use tagged switch on treasuryTxn.Request_Type.String",
+      "Severity": "",
+      "SourceLines": ["\tif treasuryTxn.Request_Type.String == \"Request\" {"],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnstreasury.go",
+        "Offset": 98548,
+        "Line": 2222,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Replace with tagged switch",
+          "TextEdits": [
+            {
+              "Pos": 98548,
+              "End": 98548,
+              "NewText": "c3dpdGNoIHRyZWFzdXJ5VHhuLlJlcXVlc3RfVHlwZS5TdHJpbmcgewo="
+            },
+            { "Pos": 98548, "End": 98597, "NewText": "Y2FzZSAiUmVxdWVzdCI6" },
+            { "Pos": 98654, "End": 98661, "NewText": null },
+            {
+              "Pos": 98661,
+              "End": 98713,
+              "NewText": "Y2FzZSAiUmVtaXR0YW5jZSI6"
+            },
+            { "Pos": 98773, "End": 98773, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1003: could use tagged switch on treasuryTxn.Request_Type.String",
+      "Severity": "",
+      "SourceLines": [
+        "\tif treasuryTxn.Request_Type.String == \"Cheque Request\" {"
+      ],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnstreasury.go",
+        "Offset": 99346,
+        "Line": 2246,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Replace with tagged switch",
+          "TextEdits": [
+            {
+              "Pos": 99346,
+              "End": 99346,
+              "NewText": "c3dpdGNoIHRyZWFzdXJ5VHhuLlJlcXVlc3RfVHlwZS5TdHJpbmcgewo="
+            },
+            {
+              "Pos": 99346,
+              "End": 99402,
+              "NewText": "Y2FzZSAiQ2hlcXVlIFJlcXVlc3QiOg=="
+            },
+            { "Pos": 99553, "End": 99560, "NewText": null },
+            {
+              "Pos": 99560,
+              "End": 99619,
+              "NewText": "Y2FzZSAiQ2hlcXVlIFJlbWl0dGFuY2UiOg=="
+            },
+            { "Pos": 99774, "End": 99774, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1007: could merge conditional assignment into variable declaration",
+      "Severity": "",
+      "SourceLines": ["\tisRSAO := false"],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnstreasury.go",
+        "Offset": 100304,
+        "Line": 2276,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Merge conditional assignment into variable declaration",
+          "TextEdits": [
+            {
+              "Pos": 100314,
+              "End": 100319,
+              "NewText": "c3JjRERPSUQgIT0gZGVzdERET0lE"
+            },
+            { "Pos": 100322, "End": 100369, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1007: could merge conditional assignment into variable declaration",
+      "Severity": "",
+      "SourceLines": ["\tisRSAO := false"],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnstreasury.go",
+        "Offset": 133653,
+        "Line": 2961,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Merge conditional assignment into variable declaration",
+          "TextEdits": [
+            {
+              "Pos": 133663,
+              "End": 133668,
+              "NewText": "Q2hxUmVtaXRUeG4uTkNERE9fU2VudF9EYXRlLlN0cmluZyAhPSBjb25zdHMuTmlsQ2hxRGF0ZQ=="
+            },
+            { "Pos": 133671, "End": 133752, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1004: could use strings.ReplaceAll instead",
+      "Severity": "",
+      "SourceLines": [
+        "\tsqlStrings[0] = strings.Replace(sqlStrings[0], \"SELECT\", \"\", -1)"
+      ],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnstreasury.go",
+        "Offset": 140464,
+        "Line": 3105,
+        "Column": 18
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Use strings.ReplaceAll instead",
+          "TextEdits": [
+            {
+              "Pos": 140464,
+              "End": 140479,
+              "NewText": "c3RyaW5ncy5SZXBsYWNlQWxs"
+            },
+            { "Pos": 140509, "End": 140511, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1003: could use tagged switch on treasuryMiscTxn.Trans_Type.String",
+      "Severity": "",
+      "SourceLines": [
+        "\tif treasuryMiscTxn.Trans_Type.String == \"Receipts\" {"
+      ],
+      "Pos": {
+        "Filename": "repo\\postgres\\txnstreasurymisc.go",
+        "Offset": 25626,
+        "Line": 650,
+        "Column": 2
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Replace with tagged switch",
+          "TextEdits": [
+            {
+              "Pos": 25626,
+              "End": 25626,
+              "NewText": "c3dpdGNoIHRyZWFzdXJ5TWlzY1R4bi5UcmFuc19UeXBlLlN0cmluZyB7Cg=="
+            },
+            {
+              "Pos": 25626,
+              "End": 25678,
+              "NewText": "Y2FzZSAiUmVjZWlwdHMiOg=="
+            },
+            { "Pos": 25778, "End": 25785, "NewText": null },
+            {
+              "Pos": 25785,
+              "End": 25837,
+              "NewText": "Y2FzZSAiUGF5bWVudHMiOg=="
+            },
+            { "Pos": 25937, "End": 25937, "NewText": null }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1008: could remove embedded field \"Engine\" from selector",
+      "Severity": "",
+      "SourceLines": ["\tRouter.Engine.ServeHTTP(rec, req)"],
+      "Pos": {
+        "Filename": "tests\\configbankaddlcredit_test.go",
+        "Offset": 502,
+        "Line": 22,
+        "Column": 9
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Remove embedded field \"Engine\" from selector",
+          "TextEdits": [{ "Pos": 502, "End": 509, "NewText": null }]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1008: could remove embedded field \"Engine\" from selector",
+      "Severity": "",
+      "SourceLines": ["\tRouter.Engine.ServeHTTP(rec, req)"],
+      "Pos": {
+        "Filename": "tests\\configbankaddlcredit_test.go",
+        "Offset": 968,
+        "Line": 37,
+        "Column": 9
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Remove embedded field \"Engine\" from selector",
+          "TextEdits": [{ "Pos": 968, "End": 975, "NewText": null }]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "QF1008: could remove embedded field \"Engine\" from selector",
+      "Severity": "",
+      "SourceLines": ["\tRouter.Engine.ServeHTTP(rec, req)"],
+      "Pos": {
+        "Filename": "tests\\configbankaddlcredit_test.go",
+        "Offset": 1450,
+        "Line": 52,
+        "Column": 9
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "Remove embedded field \"Engine\" from selector",
+          "TextEdits": [{ "Pos": 1450, "End": 1457, "NewText": null }]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "unused",
+      "Text": "type createCashBag is unused",
+      "Severity": "",
+      "SourceLines": ["type createCashBag struct {"],
+      "Pos": {
+        "Filename": "handler\\response\\txnstreasury.go",
+        "Offset": 10998,
+        "Line": 241,
+        "Column": 6
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    }
+  ],
+  "Report": {
+    "Linters": [
+      { "Name": "arangolint" },
+      { "Name": "asasalint" },
+      { "Name": "asciicheck" },
+      { "Name": "bidichk" },
+      { "Name": "bodyclose" },
+      { "Name": "canonicalheader" },
+      { "Name": "containedctx" },
+      { "Name": "contextcheck" },
+      { "Name": "copyloopvar" },
+      { "Name": "cyclop" },
+      { "Name": "decorder" },
+      { "Name": "depguard" },
+      { "Name": "dogsled" },
+      { "Name": "dupl" },
+      { "Name": "dupword" },
+      { "Name": "durationcheck" },
+      { "Name": "embeddedstructfieldcheck" },
+      { "Name": "errcheck", "Enabled": true },
+      { "Name": "errchkjson" },
+      { "Name": "errname" },
+      { "Name": "errorlint" },
+      { "Name": "exhaustive" },
+      { "Name": "exhaustruct" },
+      { "Name": "exptostd" },
+      { "Name": "forbidigo" },
+      { "Name": "forcetypeassert" },
+      { "Name": "funcorder" },
+      { "Name": "fatcontext" },
+      { "Name": "funlen" },
+      { "Name": "gci" },
+      { "Name": "ginkgolinter" },
+      { "Name": "gocheckcompilerdirectives" },
+      { "Name": "gochecknoglobals" },
+      { "Name": "gochecknoinits" },
+      { "Name": "gochecksumtype" },
+      { "Name": "gocognit" },
+      { "Name": "goconst" },
+      { "Name": "gocritic" },
+      { "Name": "gocyclo" },
+      { "Name": "godoclint" },
+      { "Name": "godot" },
+      { "Name": "godox" },
+      { "Name": "err113" },
+      { "Name": "gofmt" },
+      { "Name": "gofumpt" },
+      { "Name": "golines" },
+      { "Name": "goheader" },
+      { "Name": "goimports" },
+      { "Name": "mnd" },
+      { "Name": "modernize" },
+      { "Name": "gomoddirectives" },
+      { "Name": "gomodguard" },
+      { "Name": "goprintffuncname" },
+      { "Name": "gosec" },
+      { "Name": "gosmopolitan" },
+      { "Name": "govet", "Enabled": true },
+      { "Name": "grouper" },
+      { "Name": "iface" },
+      { "Name": "importas" },
+      { "Name": "inamedparam" },
+      { "Name": "ineffassign", "Enabled": true },
+      { "Name": "interfacebloat" },
+      { "Name": "intrange" },
+      { "Name": "iotamixing" },
+      { "Name": "ireturn" },
+      { "Name": "lll" },
+      { "Name": "loggercheck" },
+      { "Name": "maintidx" },
+      { "Name": "makezero" },
+      { "Name": "mirror" },
+      { "Name": "misspell" },
+      { "Name": "musttag" },
+      { "Name": "nakedret" },
+      { "Name": "nestif" },
+      { "Name": "nilerr" },
+      { "Name": "nilnesserr" },
+      { "Name": "nilnil" },
+      { "Name": "nlreturn" },
+      { "Name": "noctx" },
+      { "Name": "noinlineerr" },
+      { "Name": "nonamedreturns" },
+      { "Name": "nosprintfhostport" },
+      { "Name": "paralleltest" },
+      { "Name": "perfsprint" },
+      { "Name": "prealloc" },
+      { "Name": "predeclared" },
+      { "Name": "promlinter" },
+      { "Name": "protogetter" },
+      { "Name": "reassign" },
+      { "Name": "recvcheck" },
+      { "Name": "revive" },
+      { "Name": "rowserrcheck" },
+      { "Name": "sloglint" },
+      { "Name": "sqlclosecheck" },
+      { "Name": "spancheck" },
+      { "Name": "staticcheck", "Enabled": true },
+      { "Name": "swaggo" },
+      { "Name": "tagalign" },
+      { "Name": "tagliatelle" },
+      { "Name": "testableexamples" },
+      { "Name": "testifylint" },
+      { "Name": "testpackage" },
+      { "Name": "thelper" },
+      { "Name": "tparallel" },
+      { "Name": "typecheck", "Enabled": true },
+      { "Name": "unconvert" },
+      { "Name": "unparam" },
+      { "Name": "unqueryvet" },
+      { "Name": "unused", "Enabled": true },
+      { "Name": "usestdlibvars" },
+      { "Name": "usetesting" },
+      { "Name": "varnamelen" },
+      { "Name": "wastedassign" },
+      { "Name": "whitespace" },
+      { "Name": "wrapcheck" },
+      { "Name": "wsl" },
+      { "Name": "wsl_v5" },
+      { "Name": "zerologlint" },
+      { "Name": "nolintlint" }
+    ]
+  }
+}

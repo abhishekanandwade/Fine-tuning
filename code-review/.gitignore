@@ -1,0 +1,69 @@
+# ─── Go Code Reviewer .gitignore ─────────────────────────────────────────
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Models (large files — use Git LFS or external storage)
+models/
+*.bin
+*.safetensors
+*.gguf
+*.pt
+*.pth
+
+# RAG vector store (rebuild from standards)
+rag/qdrant_db/
+
+# Training outputs
+training/outputs/
+training/checkpoints/
+wandb/
+runs/
+logs/
+
+# Dataset build artifacts
+dataset/output/
+dataset/*.jsonl
+dataset/*.csv
+
+# Reports
+output/
+*.sarif
+review-report.md
+review-results.*
+
+# Go AST helper binary
+pipeline/go_ast_helper
+pipeline/go_ast_helper.exe
+pipeline/*.exe
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Docker
+.dockerignore
+
+# Environment
+.env
+.env.local

@@ -1,0 +1,444 @@
+{
+	"Golang errors": {},
+	"Issues": [
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion uint64 -\u003e int",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\repo\\postgres\\txnstreasurymisc.go",
+			"code": "940: \t\t// Where(sq.Eq{\"b.division_office_id\": officeID}).\n941: \t\tWhere(sq.Expr(\"(b.division_office_id=\" + strconv.Itoa(int(officeID)) + \")\")).\n942: \t\tWhere(sq.Expr(\"a.try_posting_date BETWEEN ? AND ?\", fromDate, EndDate)).\n",
+			"line": "941",
+			"column": "60",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion uint64 -\u003e int",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\repo\\postgres\\daybeginend.go",
+			"code": "769: \t\t// Join(\"tryschema.kafka_ofFice_master b on a.office_id=b.office_id\").\n770: \t\tWhere(sq.Expr(\"(a.office_id=\" + strconv.Itoa(int(payload.OfficeId)) + \")\")).\n771: \t\tWhere(sq.Expr(qryString))\n",
+			"line": "770",
+			"column": "51",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion uint64 -\u003e int",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\repo\\postgres\\daybeginend.go",
+			"code": "751: \t\t// Join(\"tryschema.kafka_ofFice_master b on a.office_id=b.office_id\").\n752: \t\tWhere(sq.Expr(\"(a.office_id=\" + strconv.Itoa(int(officeID)) + \")\")).\n753: \t\tWhere(sq.Expr(qryString)).\n",
+			"line": "752",
+			"column": "51",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion uint64 -\u003e int",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\repo\\postgres\\daybeginend.go",
+			"code": "733: \t\tJoin(\"tryschema.kafka_ofFice_master b on a.office_id=b.office_id\").\n734: \t\tWhere(sq.Expr(\"(a.office_id=\" + strconv.Itoa(int(officeID)) + \" or accounting_office_id=\" + strconv.Itoa(int(officeID)) + \")\")).\n735: \t\tWhere(sq.GtOrEq{\"transaction_date\": fromDate}).\n",
+			"line": "734",
+			"column": "111",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion uint64 -\u003e int",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\repo\\postgres\\daybeginend.go",
+			"code": "733: \t\tJoin(\"tryschema.kafka_ofFice_master b on a.office_id=b.office_id\").\n734: \t\tWhere(sq.Expr(\"(a.office_id=\" + strconv.Itoa(int(officeID)) + \" or accounting_office_id=\" + strconv.Itoa(int(officeID)) + \")\")).\n735: \t\tWhere(sq.GtOrEq{\"transaction_date\": fromDate}).\n",
+			"line": "734",
+			"column": "51",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion uint64 -\u003e int",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\repo\\postgres\\configoffices.go",
+			"code": "221: \t\t// Where(sq.Eq{\"division_office_id\": divisionID}).\n222: \t\tWhere(sq.Expr(\"(a.office_id=\" + strconv.Itoa(int(divisionID)) + \" or division_office_id=\" + strconv.Itoa(int(divisionID)) + \")\")).\n223: \t\tWhere(sq.Expr(\"valid_from\u003cNOW() and valid_to\u003eNOW()\")).\n",
+			"line": "222",
+			"column": "51",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion uint64 -\u003e int",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\repo\\postgres\\configoffices.go",
+			"code": "221: \t\t// Where(sq.Eq{\"division_office_id\": divisionID}).\n222: \t\tWhere(sq.Expr(\"(a.office_id=\" + strconv.Itoa(int(divisionID)) + \" or division_office_id=\" + strconv.Itoa(int(divisionID)) + \")\")).\n223: \t\tWhere(sq.Expr(\"valid_from\u003cNOW() and valid_to\u003eNOW()\")).\n",
+			"line": "222",
+			"column": "111",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion uint64 -\u003e int",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\handler\\integrationippbapi.go",
+			"code": "151: \n152: \txmlFinal := `\u003csoapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:web=\"http://webservice.fiusb.ci.infosys.com/\"\u003e\u003csoapenv:Header/\u003e\u003csoapenv:Body\u003e\u003cweb:executeService\u003e\u003carg0\u003e\u003c![CDATA[\u003c?xml version=\"1.0\" encoding=\"UTF-8\"?\u003e\u003cFIXML xsi:schemaLocation=\"http://www.finacle.com/fixml RetCustAdd.xsd\" xmlns=\"http://www.finacle.com/fixml\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\u003e\u003cHeader\u003e\u003cRequestHeader\u003e\u003cMessageKey\u003e\u003cRequestUUID\u003e` + m.RequestUUID + `\u003c/RequestUUID\u003e\u003cServiceRequestId\u003eexecuteFinacleScript\u003c/ServiceRequestId\u003e\u003cServiceRequestVersion\u003e10.2\u003c/ServiceRequestVersion\u003e\u003cChannelId\u003eCOR\u003c/ChannelId\u003e\u003cLanguageId\u003e\u003c/LanguageId\u003e\u003c/MessageKey\u003e\u003cRequestMessageInfo\u003e\u003cBankId\u003eIPPB\u003c/BankId\u003e\u003cTimeZone\u003e\u003c/TimeZone\u003e\u003cEntityId\u003e\u003c/EntityId\u003e\u003cEntityType\u003e\u003c/EntityType\u003e\u003cArmCorrelationId\u003e\u003c/ArmCorrelationId\u003e\u003cMessageDateTime\u003e` + reqMsgInfo.MessageDateTime + `\u003c/MessageDateTime\u003e\u003c/RequestMessageInfo\u003e\u003cSecurity\u003e\u003cToken\u003e\u003cPasswordToken\u003e\u003cUserId\u003e\u003c/UserId\u003e\u003cPassword\u003e\u003c/Password\u003e\u003c/PasswordToken\u003e\u003c/Token\u003e\u003cFICertToken\u003e\u003c/FICertToken\u003e\u003cRealUserLoginSessionId\u003e\u003c/RealUserLoginSessionId\u003e\u003cRealUser\u003e\u003c/RealUser\u003e\u003cRealUserPwd\u003e\u003c/RealUserPwd\u003e\u003cSSOTransferToken\u003e\u003c/SSOTransferToken\u003e\u003c/Security\u003e\u003c/RequestHeader\u003e\u003c/Header\u003e\u003cBody\u003e\u003cexecuteFinacleScriptRequest\u003e\u003cExecuteFinacleScriptInputVO\u003e\u003crequestId\u003eBoda_API_for_TranDetails.scr\u003c/requestId\u003e\u003c/ExecuteFinacleScriptInputVO\u003e\u003cexecuteFinacleScript_CustomData\u003e\u003cEodFlag\u003e` + scd.EodFlag + `\u003c/EodFlag\u003e\u003cOfficeId\u003e` + strconv.Itoa(int(scd.OfficeID)) + `\u003c/OfficeId\u003e\u003cFromDate\u003e` + scd.FromDate + `\u003c/FromDate\u003e\u003cToDate\u003e` + scd.ToDate + `\u003c/ToDate\u003e \u003c/executeFinacleScript_CustomData\u003e\u003c/executeFinacleScriptRequest\u003e\u003c/Body\u003e\u003c/FIXML\u003e]]\u003e\u003c/arg0\u003e\u003c/web:executeService\u003e\u003c/soapenv:Body\u003e\u003c/soapenv:Envelope\u003e`\n153: \n",
+			"line": "152",
+			"column": "1437",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion uint64 -\u003e int",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\handler\\integrationippbapi.go",
+			"code": "95: \n96: \txmlFinal := `\u003csoapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:web=\"http://webservice.fiusb.ci.infosys.com/\"\u003e\u003csoapenv:Header/\u003e\u003csoapenv:Body\u003e\u003cweb:executeService\u003e\u003carg0\u003e\u003c![CDATA[\u003c?xml version=\"1.0\" encoding=\"UTF-8\"?\u003e\u003cFIXML xsi:schemaLocation=\"http://www.finacle.com/fixml RetCustAdd.xsd\" xmlns=\"http://www.finacle.com/fixml\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\u003e\u003cHeader\u003e\u003cRequestHeader\u003e\u003cMessageKey\u003e\u003cRequestUUID\u003e` + m.RequestUUID + `\u003c/RequestUUID\u003e\u003cServiceRequestId\u003eexecuteFinacleScript\u003c/ServiceRequestId\u003e\u003cServiceRequestVersion\u003e10.2\u003c/ServiceRequestVersion\u003e\u003cChannelId\u003eCOR\u003c/ChannelId\u003e\u003cLanguageId\u003e\u003c/LanguageId\u003e\u003c/MessageKey\u003e\u003cRequestMessageInfo\u003e\u003cBankId\u003eIPPB\u003c/BankId\u003e\u003cTimeZone\u003e\u003c/TimeZone\u003e\u003cEntityId\u003e\u003c/EntityId\u003e\u003cEntityType\u003e\u003c/EntityType\u003e\u003cArmCorrelationId\u003e\u003c/ArmCorrelationId\u003e\u003cMessageDateTime\u003e` + reqMsgInfo.MessageDateTime + `\u003c/MessageDateTime\u003e\u003c/RequestMessageInfo\u003e\u003cSecurity\u003e\u003cToken\u003e\u003cPasswordToken\u003e\u003cUserId\u003e\u003c/UserId\u003e\u003cPassword\u003e\u003c/Password\u003e\u003c/PasswordToken\u003e\u003c/Token\u003e\u003cFICertToken\u003e\u003c/FICertToken\u003e\u003cRealUserLoginSessionId\u003e\u003c/RealUserLoginSessionId\u003e\u003cRealUser\u003e\u003c/RealUser\u003e\u003cRealUserPwd\u003e\u003c/RealUserPwd\u003e\u003cSSOTransferToken\u003e\u003c/SSOTransferToken\u003e\u003c/Security\u003e\u003c/RequestHeader\u003e\u003c/Header\u003e\u003cBody\u003e\u003cexecuteFinacleScriptRequest\u003e\u003cExecuteFinacleScriptInputVO\u003e\u003crequestId\u003eBoda_API_for_TranDetails.scr\u003c/requestId\u003e\u003c/ExecuteFinacleScriptInputVO\u003e\u003cexecuteFinacleScript_CustomData\u003e\u003cEodFlag\u003e` + scd.EodFlag + `\u003c/EodFlag\u003e\u003cOfficeId\u003e` + strconv.Itoa(int(scd.OfficeID)) + `\u003c/OfficeId\u003e\u003cFromDate\u003e` + scd.FromDate + `\u003c/FromDate\u003e\u003cToDate\u003e` + scd.ToDate + `\u003c/ToDate\u003e \u003c/executeFinacleScript_CustomData\u003e\u003c/executeFinacleScriptRequest\u003e\u003c/Body\u003e\u003c/FIXML\u003e]]\u003e\u003c/arg0\u003e\u003c/web:executeService\u003e\u003c/soapenv:Body\u003e\u003c/soapenv:Envelope\u003e`\n97: \n",
+			"line": "96",
+			"column": "1437",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion uint64 -\u003e int",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\handler\\daybeginend.go",
+			"code": "453: \t}\n454: \tch.cache.DeleteRedisKey(ctx, strconv.Itoa(int(req.OfficeID))+\"_\"+strings.ReplaceAll(req.TransDate, \"-\", \"_\")+\"_daybeginendstatus\")\n455: \thandleSuccess(ctx, \"\")\n",
+			"line": "454",
+			"column": "47",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion uint64 -\u003e int",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\handler\\daybeginend.go",
+			"code": "441: \t}\n442: \tch.cache.DeleteRedisKey(ctx, strconv.Itoa(int(req.OfficeID))+\"_\"+strings.ReplaceAll(currDate, \"-\", \"_\")+\"_daybeginendstatus\")\n443: \n",
+			"line": "442",
+			"column": "47",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion uint64 -\u003e int",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\handler\\daybeginend.go",
+			"code": "316: \tvar daybeginenddata string\n317: \tdaybeginenddata, err := ch.cache.FetchDataWithCustomKey(ctx, strconv.Itoa(int(req.OfficeID))+\"_\"+strings.ReplaceAll(req.FromDate, \"-\", \"_\")+\"_daybeginendstatus\", ch.svc.ListDayBeginEnd_Redis, ctx, payload)\n318: \n",
+			"line": "317",
+			"column": "79",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion uint64 -\u003e int",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\handler\\daybeginend.go",
+			"code": "200: \t}\n201: \tch.cache.DeleteRedisKey(ctx, strconv.Itoa(int(req.OfficeID))+\"_\"+strings.ReplaceAll(req.TransDate, \"-\", \"_\")+\"_daybeginendstatus\")\n202: \tlog.Debug(ctx, \"UpdateOfficesPerformDayEndHandler response: %v\", apiRes)\n",
+			"line": "201",
+			"column": "47",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion uint64 -\u003e int",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\handler\\daybeginend.go",
+			"code": "87: \tcurrDate := repo.GetCurrentDateString()\n88: \tch.cache.DeleteRedisKey(ctx, strconv.Itoa(int(req.OfficeID))+\"_\"+strings.ReplaceAll(currDate, \"-\", \"_\")+\"_daybeginendstatus\")\n89: \n",
+			"line": "88",
+			"column": "47",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion int -\u003e uint64",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\repo\\postgres\\integrationippbapi.go",
+			"code": "320: \n321: \t\t\ttcberr := CreateTcbBalanceBatch(ctx, batch.Batch, uint64(offId), uint64(line.UserId), line.RecAmt, line.PayAmt, iar.Db)\n322: \n",
+			"line": "321",
+			"column": "60",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion int -\u003e uint64",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\repo\\postgres\\integrationippbapi.go",
+			"code": "315: \t\t\t}\n316: \t\t\tcberr = updateCashBalanceBatch(batch.Batch, uint64(offId), line.PayAmt, \"payments\")\n317: \t\t\tif cberr != nil {\n",
+			"line": "316",
+			"column": "54",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion int -\u003e uint64",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\repo\\postgres\\integrationippbapi.go",
+			"code": "311: \t\t\toffId, _ := strconv.Atoi(line.OfficeId)\n312: \t\t\tcberr := updateCashBalanceBatch(batch.Batch, uint64(offId), line.RecAmt, \"receipts\")\n313: \t\t\tif cberr != nil {\n",
+			"line": "312",
+			"column": "55",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion int -\u003e uint64",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\repo\\postgres\\integrationippbapi.go",
+			"code": "175: \t\t\t}\n176: \t\t\ttcberr := CreateTcbBalanceBatch(ctx, batch.Batch, uint64(offId), uint64(line.UserId), line.RecAmt, line.PayAmt, iar.Db)\n177: \t\t\t// tcbQuery := psql.Update(\"tryschema.tcb_balance\").Set(\"last_updated\", sq.Expr(\"now()\")).Set(\"receipts\", sq.Expr(\"receipts+?\", line.RecAmt)).Set(\"payments\", sq.Expr(\"payments+?\", line.PayAmt)).Where(sq.And{sq.Eq{\"office_id\": line.OfficeId}, sq.Eq{\"trans_date\": time.Now().Format(\"2006-01-02\")}, sq.Eq{\"user_id\": line.UserId}})\n",
+			"line": "176",
+			"column": "60",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion int -\u003e uint64",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\repo\\postgres\\integrationippbapi.go",
+			"code": "170: \t\t\tif line.PayAmt \u003e 0 {\n171: \t\t\t\tcberr := updateCashBalanceBatch(batch.Batch, uint64(offId), line.PayAmt, \"payments\")\n172: \t\t\t\tif cberr != nil {\n",
+			"line": "171",
+			"column": "56",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "190",
+				"url": "https://cwe.mitre.org/data/definitions/190.html"
+			},
+			"rule_id": "G115",
+			"details": "integer overflow conversion int -\u003e uint64",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\repo\\postgres\\integrationippbapi.go",
+			"code": "164: \t\t\tif line.RecAmt \u003e 0 {\n165: \t\t\t\tcberr := updateCashBalanceBatch(batch.Batch, uint64(offId), line.RecAmt, \"receipts\")\n166: \t\t\t\tif cberr != nil {\n",
+			"line": "165",
+			"column": "56",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "HIGH",
+			"cwe": {
+				"id": "295",
+				"url": "https://cwe.mitre.org/data/definitions/295.html"
+			},
+			"rule_id": "G402",
+			"details": "TLS InsecureSkipVerify set to true.",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\handler\\temporal.go",
+			"code": "576: \t\tTransport: \u0026http.Transport{\n577: \t\t\tTLSClientConfig: \u0026tls.Config{InsecureSkipVerify: true},\n578: \t\t},\n",
+			"line": "577",
+			"column": "53",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "HIGH",
+			"cwe": {
+				"id": "295",
+				"url": "https://cwe.mitre.org/data/definitions/295.html"
+			},
+			"rule_id": "G402",
+			"details": "TLS InsecureSkipVerify set to true.",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\handler\\temporal.go",
+			"code": "276: \t\tTransport: \u0026http.Transport{\n277: \t\t\tTLSClientConfig: \u0026tls.Config{InsecureSkipVerify: true},\n278: \t\t\t// TLSClientConfig: \u0026tls.Config{},\n",
+			"line": "277",
+			"column": "53",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "HIGH",
+			"cwe": {
+				"id": "295",
+				"url": "https://cwe.mitre.org/data/definitions/295.html"
+			},
+			"rule_id": "G402",
+			"details": "TLS InsecureSkipVerify set to true.",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\handler\\integrationippbapi.go",
+			"code": "229: \t\tTransport: \u0026http.Transport{\n230: \t\t\tTLSClientConfig:       \u0026tls.Config{InsecureSkipVerify: true},\n231: \t\t\tIdleConnTimeout:       5 * time.Second,\n",
+			"line": "230",
+			"column": "59",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "HIGH",
+			"cwe": {
+				"id": "295",
+				"url": "https://cwe.mitre.org/data/definitions/295.html"
+			},
+			"rule_id": "G402",
+			"details": "TLS InsecureSkipVerify set to true.",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\handler\\integrationcbsapi.go",
+			"code": "327: \t\tTransport: \u0026http.Transport{\n328: \t\t\tTLSClientConfig:       \u0026tls.Config{InsecureSkipVerify: true},\n329: \t\t\tIdleConnTimeout:       5 * time.Second, // Set IdleConnTimeout to 5 seconds\n",
+			"line": "328",
+			"column": "59",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "HIGH",
+			"confidence": "MEDIUM",
+			"cwe": {
+				"id": "400",
+				"url": "https://cwe.mitre.org/data/definitions/400.html"
+			},
+			"rule_id": "G118",
+			"details": "Goroutine uses context.Background/TODO while request-scoped context is available",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\bootstrap\\bootstrapper.go",
+			"code": "349: \t\tOnStart: func(context.Context) error {\n350: \t\t\tgo func() {\n351: \t\t\t\terr := w.Run(worker.InterruptCh())\n",
+			"line": "350",
+			"column": "4",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "LOW",
+			"confidence": "HIGH",
+			"cwe": {
+				"id": "703",
+				"url": "https://cwe.mitre.org/data/definitions/703.html"
+			},
+			"rule_id": "G104",
+			"details": "Errors unhandled",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\handler\\sftpclientcreation.go",
+			"code": "90: \t// Close the old connection before reconnecting\n91: \ts.Close()\n92: \n",
+			"line": "91",
+			"column": "2",
+			"nosec": false,
+			"suppressions": null
+		},
+		{
+			"severity": "LOW",
+			"confidence": "HIGH",
+			"cwe": {
+				"id": "703",
+				"url": "https://cwe.mitre.org/data/definitions/703.html"
+			},
+			"rule_id": "G104",
+			"details": "Errors unhandled",
+			"file": "D:\\it2\\code\\treasury-management-back-end\\handler\\sftpclientcreation.go",
+			"code": "69: \t\tlog.Error(ctx, fmt.Sprintf(\"Failed to start SFTP session on %s:%s: %s\", server, port, err.Error()))\n70: \t\tconn.Close() // Close SSH connection if SFTP fails\n71: \t\treturn err\n",
+			"line": "70",
+			"column": "3",
+			"nosec": false,
+			"suppressions": null
+		}
+	],
+	"Stats": {
+		"files": 155,
+		"lines": 79778,
+		"nosec": 0,
+		"found": 27
+	},
+	"GosecVersion": "dev"
+}
