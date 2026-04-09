@@ -530,7 +530,7 @@ Review the above Go code against the provided coding standards. For each violati
 def main():
     parser = argparse.ArgumentParser(description="Go Code Review Pipeline")
     parser.add_argument("--repo", required=True, help="Path to Go repository")
-    parser.add_argument("--model", default="./models/go-reviewer", help="Path to fine-tuned model")
+    parser.add_argument("--model", default="./go-reviewer-final", help="Path to fine-tuned model")
     parser.add_argument("--base-model", default="deepseek-ai/deepseek-coder-6.7b-instruct")
     parser.add_argument("--mode", choices=["hybrid", "rag-only", "fine-tune-only"], default="hybrid")
     parser.add_argument("--rag-db", default="./rag/qdrant_db", help="Path to Qdrant DB")
