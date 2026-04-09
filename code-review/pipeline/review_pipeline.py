@@ -193,6 +193,16 @@ class GoReviewPipeline:
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
 
+        # Determine attention implementation safely
+        attn_implementation = "eager"
+        if torch.cuda.is_available():
+            try:
+                import flash_attn  # noqa: F401
+                attn_implementation = "flash_attention_2"
+                print("[INFO] FlashAttention2 available, using flash_attention_2.")
+            except ImportError:
+                print("[INFO] FlashAttention2 not installed, falling back to eager attention.")
+
         # Check if model_path is an adapter or full model
         adapter_config_path = os.path.join(self.config.model_path, "adapter_config.json")
 
@@ -204,7 +214,7 @@ class GoReviewPipeline:
                 device_map=self.config.device,
                 torch_dtype=torch.bfloat16,
                 trust_remote_code=True,
-                attn_implementation="flash_attention_2" if torch.cuda.is_available() else "eager",
+                attn_implementation=attn_implementation,
             )
             self.model = PeftModel.from_pretrained(base_model, self.config.model_path)
             print("[INFO] Loaded LoRA adapter on base model.")
@@ -216,6 +226,7 @@ class GoReviewPipeline:
                 device_map=self.config.device,
                 torch_dtype=torch.bfloat16,
                 trust_remote_code=True,
+                attn_implementation=attn_implementation,
             )
             print("[INFO] Loaded merged model.")
 
