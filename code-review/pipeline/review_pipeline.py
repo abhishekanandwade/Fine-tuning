@@ -15,11 +15,19 @@ Usage (as module):
 """
 
 import os
+import sys
 import json
 import time
 import argparse
 from typing import Dict, List, Optional
 from dataclasses import dataclass, field, asdict
+
+# Ensure the code-review root (parent of this file's directory) is on sys.path
+# so that sibling packages like 'rag' and 'pipeline' are importable regardless
+# of where the script is invoked from.
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
