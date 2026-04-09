@@ -87,6 +87,17 @@ class GoStandardsRetriever:
             embeddings=self.embeddings,
         )
 
+    def close(self) -> None:
+        """Explicitly close the Qdrant client to avoid shutdown-time ImportError."""
+        try:
+            if self.client is not None:
+                self.client.close()
+        except Exception:
+            pass
+
+    def __del__(self) -> None:
+        self.close()
+
     def retrieve(
         self,
         code_snippet: str,

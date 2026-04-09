@@ -163,6 +163,25 @@ class GoReviewPipeline:
         self._loaded = True
         print("[INFO] Pipeline ready.")
 
+    def close(self) -> None:
+        """Release resources (model, retriever) explicitly."""
+        if self.retriever is not None:
+            try:
+                self.retriever.close()
+            except Exception:
+                pass
+            self.retriever = None
+        self.model = None
+        self.tokenizer = None
+        self._loaded = False
+
+    def __enter__(self):
+        self.load()
+        return self
+
+    def __exit__(self, *_):
+        self.close()
+
     def _load_retriever(self):
         """Initialize the RAG retriever."""
         try:
@@ -360,9 +379,8 @@ Review the above Go code against the provided coding standards. For each violati
         rules_context = ""
         if self.retriever and self.config.mode in ("hybrid", "rag-only"):
             try:
-                from rag.retriever import format_rules_for_prompt
                 docs = self.retriever.retrieve(code, top_k=self.config.top_k)
-                rules_context = format_rules_for_prompt(docs)
+                rules_context = self.retriever.format_rules_for_prompt(docs)
             except Exception as e:
                 print(f"[WARN] RAG retrieval failed for {chunk_name}: {e}")
 
@@ -372,6 +390,7 @@ Review the above Go code against the provided coding standards. For each violati
 
         # ── Build prompt and generate ──
         user_prompt = self._build_prompt(code, rules_context)
+        print(f"  [INFO] Running inference for {chunk_name}...")
 
         if self.config.mode == "rag-only":
             # For rag-only mode, use a base model or Ollama without fine-tuning
@@ -569,8 +588,8 @@ def main():
         ollama_model=args.ollama_model,
     )
 
-    pipeline = GoReviewPipeline(config=config)
-    report = pipeline.review_repository(args.repo)
+    with GoReviewPipeline(config=config) as pipeline:
+        report = pipeline.review_repository(args.repo)
 
     # Generate output
     if args.format == "json":
