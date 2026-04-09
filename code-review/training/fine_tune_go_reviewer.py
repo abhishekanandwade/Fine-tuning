@@ -262,6 +262,14 @@ def train(config: dict):
         )
 
     # 6. Training configuration
+    # Compute warmup_steps from warmup_ratio
+    num_steps_per_epoch = max(1, len(formatted_train) // (train_cfg["per_device_train_batch_size"] * train_cfg["gradient_accumulation_steps"]))
+    total_steps = num_steps_per_epoch * train_cfg["num_train_epochs"]
+    warmup_steps = max(1, int(total_steps * train_cfg.get("warmup_ratio", 0.05)))
+
+    # Set max_seq_length on the tokenizer
+    tokenizer.model_max_length = train_cfg["max_seq_length"]
+
     sft_config = SFTConfig(
         output_dir=train_cfg["output_dir"],
         num_train_epochs=train_cfg["num_train_epochs"],
@@ -270,7 +278,7 @@ def train(config: dict):
         gradient_checkpointing=train_cfg["gradient_checkpointing"],
         learning_rate=train_cfg["learning_rate"],
         lr_scheduler_type=train_cfg["lr_scheduler_type"],
-        warmup_ratio=train_cfg["warmup_ratio"],
+        warmup_steps=warmup_steps,
         packing=train_cfg["packing"],
         fp16=train_cfg["fp16"],
         bf16=train_cfg["bf16"],
@@ -292,7 +300,6 @@ def train(config: dict):
         args=sft_config,
         train_dataset=formatted_train,
         eval_dataset=formatted_val,
-        max_seq_length=train_cfg["max_seq_length"],
     )
 
     # 8. Train
