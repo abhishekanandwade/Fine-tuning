@@ -288,7 +288,7 @@ def train(config: dict):
     # 7. Initialize trainer
     trainer = SFTTrainer(
         model=model,
-        tokenizer=tokenizer,
+        processing_class=tokenizer,
         args=sft_config,
         train_dataset=formatted_train,
         eval_dataset=formatted_val,
