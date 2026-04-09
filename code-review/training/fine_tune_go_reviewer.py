@@ -271,7 +271,6 @@ def train(config: dict):
         learning_rate=train_cfg["learning_rate"],
         lr_scheduler_type=train_cfg["lr_scheduler_type"],
         warmup_ratio=train_cfg["warmup_ratio"],
-        max_seq_length=train_cfg["max_seq_length"],
         packing=train_cfg["packing"],
         fp16=train_cfg["fp16"],
         bf16=train_cfg["bf16"],
@@ -293,6 +292,7 @@ def train(config: dict):
         args=sft_config,
         train_dataset=formatted_train,
         eval_dataset=formatted_val,
+        max_seq_length=train_cfg["max_seq_length"],
     )
 
     # 8. Train
