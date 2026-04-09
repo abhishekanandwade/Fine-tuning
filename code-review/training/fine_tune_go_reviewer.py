@@ -131,12 +131,23 @@ def setup_model_and_tokenizer(config: dict, bnb_config: BitsAndBytesConfig):
     print(f"[INFO] Loading model: {model_name}")
     print(f"[INFO] Quantization: 4-bit NF4 with double quantization")
 
+    # Use Flash Attention 2 if available, otherwise fall back to sdpa/eager
+    attn_impl = None
+    if torch.cuda.is_available():
+        try:
+            import flash_attn  # noqa: F401
+            attn_impl = "flash_attention_2"
+            print("[INFO] Using Flash Attention 2")
+        except ImportError:
+            attn_impl = "sdpa"
+            print("[INFO] Flash Attention not installed, falling back to SDPA")
+
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         quantization_config=bnb_config,
         device_map="auto",
         trust_remote_code=model_cfg.get("trust_remote_code", True),
-        attn_implementation="flash_attention_2" if torch.cuda.is_available() else None,
+        attn_implementation=attn_impl,
     )
 
     tokenizer = AutoTokenizer.from_pretrained(

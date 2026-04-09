@@ -228,7 +228,7 @@ def verify_vector_store(
     print(f"\n[INFO] Verifying vector store with {len(test_queries)} test queries...")
 
     for query in test_queries:
-        results = vector_store.similarity_search(query, k=3)
+        results = vector_store.similarity_search(query, k=5)
         print(f"\n  Query: '{query}'")
         for i, doc in enumerate(results):
             rule_id = doc.metadata.get("rule_id", "N/A")

@@ -23,6 +23,11 @@ Usage:
 
 import os
 import sys
+
+# Ensure the project root (code-review/) is on sys.path when running this
+# script directly (e.g. `python cli/review.py …`), not just as a module.
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import json
 import time
 import argparse
@@ -36,12 +41,12 @@ def create_parser() -> argparse.ArgumentParser:
         description="LLM-powered Go code review using RAG + Fine-tuning",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-Examples:
-  %(prog)s repo ./my-go-project
-  %(prog)s repo ./my-go-project --mode rag-only --format sarif -o report.sarif
-  %(prog)s file ./main.go
-  %(prog)s serve --port 8080
-  %(prog)s build-rag --standards-dir ./standards
+        Examples:
+            %(prog)s repo ./my-go-project
+            %(prog)s repo ./my-go-project --mode rag-only --format sarif -o report.sarif
+            %(prog)s file ./main.go
+            %(prog)s serve --port 8080
+            %(prog)s build-rag --standards-dir ./standards
         """,
     )
 

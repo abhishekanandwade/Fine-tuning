@@ -223,7 +223,7 @@ class GoReviewPipeline:
         print(f"[INFO] Model loaded on {self.model.device}")
 
     def _load_ollama(self):
-        """Verify Ollama is available (actual calls done per-request)."""
+        """Verify Ollama is available (actual calls done per-request).""" 
         import requests
         try:
             r = requests.get(f"{self.config.ollama_url}/api/tags", timeout=5)
@@ -240,7 +240,7 @@ class GoReviewPipeline:
     # ── Inference ────────────────────────────────────────────────────────────
 
     def _build_prompt(self, code: str, rules_context: str) -> str:
-        """Build the review prompt with code and relevant rules."""
+        """Build the review prompt with code and relevant rules.""" 
         user_prompt = f"""## Applicable Coding Standards
 
 {rules_context}
