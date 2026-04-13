@@ -692,6 +692,7 @@ def main():
         output_data = generate_sarif_report(report)
 
     if args.output:
+        os.makedirs(os.path.dirname(os.path.abspath(args.output)), exist_ok=True)
         with open(args.output, "w", encoding="utf-8") as f:
             if isinstance(output_data, str):
                 f.write(output_data)
