@@ -52,23 +52,21 @@ DEFAULT_CONFIG = {
         "output_dir": "./go-reviewer-model",
         "num_train_epochs": 3,
         "per_device_train_batch_size": 2,
-        "gradient_accumulation_steps": 8,
+        "gradient_accumulation_steps": 4,
         "gradient_checkpointing": True,
         "learning_rate": 0.0002,
         "lr_scheduler_type": "cosine",
         "warmup_ratio": 0.05,
-        "max_seq_length": 8192,
+        "max_seq_length": 2048,
         "packing": False,
         "fp16": False,
         "bf16": True,
-        "logging_steps": 10,
-        "eval_strategy": "steps",
-        "eval_steps": 100,
-        "save_strategy": "steps",
-        "save_steps": 100,
+        "logging_steps": 1,
+        "eval_strategy": "epoch",
+        "save_strategy": "epoch",
         "save_total_limit": 3,
         "load_best_model_at_end": True,
-        "report_to": "wandb",
+        "report_to": "none",
     },
     "dataset": {
         "train_file": "dataset/processed/train.jsonl",
@@ -270,6 +268,27 @@ def train(config: dict):
     # Set max_seq_length on the tokenizer
     tokenizer.model_max_length = train_cfg["max_seq_length"]
 
+    eval_strategy = train_cfg.get("eval_strategy", "epoch")
+    save_strategy = train_cfg.get("save_strategy", "epoch")
+    load_best = train_cfg["load_best_model_at_end"]
+
+    # If no validation set, evaluation-based features must be disabled
+    if formatted_val is None:
+        print("[WARN] No validation dataset found — disabling eval and load_best_model_at_end")
+        eval_strategy = "no"
+        load_best = False
+
+    # eval_steps / save_steps are only valid when strategy is "steps";
+    # passing them when strategy="epoch" causes a Trainer validation error.
+    optional_step_kwargs = {}
+    if eval_strategy == "steps":
+        optional_step_kwargs["eval_steps"] = train_cfg.get("eval_steps", 50)
+    if save_strategy == "steps":
+        optional_step_kwargs["save_steps"] = train_cfg.get("save_steps", 50)
+
+    print(f"[INFO] Training steps/epoch: {num_steps_per_epoch} | total: {total_steps} | warmup: {warmup_steps}")
+    print(f"[INFO] eval_strategy={eval_strategy} | save_strategy={save_strategy} | report_to={train_cfg.get('report_to', 'none')}")
+
     sft_config = SFTConfig(
         output_dir=train_cfg["output_dir"],
         num_train_epochs=train_cfg["num_train_epochs"],
@@ -282,15 +301,14 @@ def train(config: dict):
         packing=train_cfg["packing"],
         fp16=train_cfg["fp16"],
         bf16=train_cfg["bf16"],
-        logging_steps=train_cfg["logging_steps"],
-        eval_strategy=train_cfg["eval_strategy"],
-        eval_steps=train_cfg["eval_steps"],
-        save_strategy=train_cfg["save_strategy"],
-        save_steps=train_cfg["save_steps"],
+        logging_steps=train_cfg.get("logging_steps", 1),
+        eval_strategy=eval_strategy,
+        save_strategy=save_strategy,
         save_total_limit=train_cfg["save_total_limit"],
-        load_best_model_at_end=train_cfg["load_best_model_at_end"],
+        load_best_model_at_end=load_best,
         report_to=train_cfg.get("report_to", "none"),
         dataset_text_field="text",
+        **optional_step_kwargs,
     )
 
     # 7. Initialize trainer

@@ -41,24 +41,22 @@ lora:
 training:
   output_dir: "./go-reviewer-model"
   num_train_epochs: 3
-  per_device_train_batch_size: 2       # Reduce to 1 for 33B models
-  gradient_accumulation_steps: 8       # Effective batch = batch_size * grad_accum = 16
-  gradient_checkpointing: true         # Saves GPU memory at cost of ~20% speed
-  learning_rate: 0.0002                # 2e-4 — standard for QLoRA
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 4       # ~2 steps/epoch with 21 examples: effective_batch=8
+  gradient_checkpointing: true
+  learning_rate: 0.0002
   lr_scheduler_type: "cosine"
   warmup_ratio: 0.05
-  max_seq_length: 8192                 # Go files can be long — keep high
-  packing: false                       # Keep examples separate for review quality
+  max_seq_length: 2048                 # Reduced for small dataset; raise for production
+  packing: false
   fp16: false
-  bf16: true                           # Use true for Ampere+ GPUs (3090, 4090, A100)
-  logging_steps: 10
-  eval_strategy: "steps"
-  eval_steps: 100
-  save_strategy: "steps"
-  save_steps: 100
+  bf16: true
+  logging_steps: 1                     # Log every step (small dataset)
+  eval_strategy: "epoch"              # Evaluate once per epoch — avoids eval_steps > total_steps
+  save_strategy: "epoch"              # Save once per epoch
   save_total_limit: 3
   load_best_model_at_end: true
-  report_to: "wandb"                   # Set to "none" to disable wandb
+  report_to: "none"                    # Set to "wandb" if wandb is configured
 
 dataset:
   train_file: "dataset/processed/train.jsonl"

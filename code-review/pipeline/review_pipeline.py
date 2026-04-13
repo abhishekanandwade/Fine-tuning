@@ -36,11 +36,10 @@ from peft import PeftModel
 
 # ── Configuration ────────────────────────────────────────────────────────────
 
-SYSTEM_PROMPT = """You are an expert Go code reviewer. You know all Go best practices,
-standard library patterns, and common pitfalls. Review the provided Go code against
-the coding standards and rules supplied below.
+SYSTEM_PROMPT = """You are an expert Go code reviewer. Your job is to find ALL violations in the code.
+You must actively search for every issue. Do not skip violations.
 
-For each violation found, output in this exact format:
+For EVERY violation found, output in this EXACT format (copy exactly):
 
 ### VIOLATION [RULE-ID] SEVERITY — Short Title
 **File:** path/to/file.go:LINE
@@ -55,11 +54,10 @@ For each violation found, output in this exact format:
 // the corrected code
 ```
 
-If no violations are found, respond with: "No violations found."
+Severity levels: CRITICAL, HIGH, MEDIUM, LOW
+Rule IDs: SEC-001, SEC-002, EH-001, EH-002, EH-003, CTX-001, LOG-001, LOG-002, NAM-001, NAM-002, CONC-001
 
-Severity levels: CRITICAL, HIGH, MEDIUM, LOW, INFO
-
-Be precise. Do not invent issues. Only flag real violations of the provided standards.
+Only if there are truly no violations at all, respond with: "No violations found."
 """
 
 
@@ -73,7 +71,7 @@ class ReviewConfig:
     rules_json: str = "./standards/rules.json"
     mode: str = "hybrid"  # "hybrid", "rag-only", "fine-tune-only"
     max_new_tokens: int = 2048
-    temperature: float = 0.1
+    temperature: float = 0.3          # raised from 0.1 — improves recall at slight precision cost
     top_p: float = 0.95
     top_k: int = 5  # Number of rules to retrieve per chunk
     batch_size: int = 1
@@ -82,6 +80,7 @@ class ReviewConfig:
     max_chunk_tokens: int = 3000
     ollama_model: Optional[str] = None  # Use Ollama instead of local model
     ollama_url: str = "http://localhost:11434"
+    debug: bool = False                 # Print raw LLM output per chunk
 
 
 @dataclass
@@ -278,18 +277,34 @@ class GoReviewPipeline:
     # ── Inference ────────────────────────────────────────────────────────────
 
     def _build_prompt(self, code: str, rules_context: str) -> str:
-        """Build the review prompt with code and relevant rules.""" 
-        user_prompt = f"""## Applicable Coding Standards
+        """Build the review prompt with code and relevant rules."""
+        user_prompt = f"""## Coding Standards to Enforce
 
 {rules_context}
 
-## Code to Review
+## Go Code to Review
 
 ```go
 {code}
 ```
 
-Review the above Go code against the provided coding standards. For each violation found, use the exact output format specified in the system prompt.
+## Your Task
+
+Carefully inspect the code above for ALL of the following violation patterns:
+
+- **SEC-001** \u2014 Hardcoded credentials, passwords, API keys, tokens, or TLS InsecureSkipVerify:true
+- **SEC-002** \u2014 SQL built via string concatenation instead of parameterized queries
+- **EH-001** \u2014 Bare `return ..., err` without fmt.Errorf wrapping
+- **EH-002** \u2014 Ignored error return (rows.Scan without err check, `_, _ =`)
+- **EH-003** \u2014 `panic(...)` used for a recoverable error condition
+- **CTX-001** \u2014 context.Context is not the first function parameter
+- **LOG-001** \u2014 fmt.Println used instead of structured logger
+- **LOG-002** \u2014 fmt.Printf used instead of structured logger
+- **NAM-001** \u2014 Variable or function name uses underscores (e.g. user_cache_ttl)
+- **NAM-002** \u2014 Acronym not all-caps in identifier (e.g. HttpConfig, BaseUrl)
+- **CONC-001** \u2014 Goroutine launched with infinite loop and no ctx.Done() / done channel
+
+Report EVERY violation you find using the format in the system prompt.
 """
         return user_prompt
 
@@ -397,6 +412,13 @@ Review the above Go code against the provided coding standards. For each violati
             raw_review = self._generate(SYSTEM_PROMPT, user_prompt)
         else:
             raw_review = self._generate(SYSTEM_PROMPT, user_prompt)
+
+        # ── Debug: print raw model output ──
+        if self.config.debug:
+            print(f"\n{'\u2500'*60}")
+            print(f"[DEBUG] Raw model output for {chunk_name}:")
+            print(raw_review)
+            print(f"{'\u2500'*60}\n")
 
         # ── Parse findings ──
         from pipeline.deduplication import parse_findings
@@ -576,6 +598,7 @@ def main():
     parser.add_argument("--output", default=None, help="Output report JSON path")
     parser.add_argument("--format", choices=["json", "markdown", "sarif"], default="json")
     parser.add_argument("--no-quant", action="store_true", help="Disable quantization")
+    parser.add_argument("--debug", action="store_true", help="Print raw LLM output for each chunk")
 
     args = parser.parse_args()
 
@@ -586,6 +609,7 @@ def main():
         rag_db_path=args.rag_db,
         use_quantization=not args.no_quant,
         ollama_model=args.ollama_model,
+        debug=getattr(args, 'debug', False),
     )
 
     with GoReviewPipeline(config=config) as pipeline:
