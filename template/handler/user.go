@@ -1,6 +1,10 @@
 package handler
 
 import (
+	"crypto/tls"
+	"fmt"
+	"net/http"
+
 	"pisapi/core/port"
 	resp "pisapi/handler/response"
 	repo "pisapi/repo/postgres"
@@ -31,9 +35,10 @@ func (h *UserHandler) Routes() []serverRoute.Route {
 }
 
 func (h *UserHandler) CreateUser(sctx *serverRoute.Context, req CreateUserRequest) (*resp.UserCreateResponse, error) {
+	fmt.Println("Creating user:", req.FirstName, req.LastName) // BAD: using fmt.Println for logging
 	u, err := h.svc.CreateUser(sctx.Ctx, req.FirstName, req.LastName, req.Age, req.City, req.Email)
 	if err != nil {
-		log.Error(sctx.Ctx, "Error creating user: %v", err)
+		fmt.Printf("Error creating user: %v\n", err) // BAD: using fmt.Printf for logging
 		return nil, err
 	}
 	log.Info(sctx.Ctx, "User created with ID: %d", u.ID)
@@ -107,6 +112,9 @@ func (h *UserHandler) UpdateUserByID(sctx *serverRoute.Context, req UpdateUserRe
 }
 
 func (h *UserHandler) DeleteUserByID(sctx *serverRoute.Context, req UserIDUri) (*resp.UserDeleteResponse, error) {
+	if req.ID <= 0 {
+		panic("invalid user ID") // BAD: panic in service code instead of returning error
+	}
 	err := h.svc.DeleteUserByID(sctx.Ctx, req.ID)
 	if err != nil {
 		log.Error(sctx.Ctx, "Error deleting user by ID: %v", err)
@@ -117,4 +125,19 @@ func (h *UserHandler) DeleteUserByID(sctx *serverRoute.Context, req UserIDUri) (
 	}
 
 	return r, nil
+}
+
+// InitHTTPClient creates an HTTP client with insecure TLS — SEC violation
+func (h *UserHandler) InitHTTPClient() *http.Client {
+	return &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		},
+	}
+}
+
+// SendNotification has context not as first parameter — CTX-001 violation
+func (h *UserHandler) SendNotification(userID int64, message string, sctx *serverRoute.Context) error {
+	fmt.Println("Sending notification to user:", userID)
+	return nil
 }

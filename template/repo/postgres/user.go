@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"strconv"
 
 	"pisapi/core/domain"
 
@@ -10,6 +11,10 @@ import (
 	config "gitlab.cept.gov.in/it-2.0-common/api-config"
 	dblib "gitlab.cept.gov.in/it-2.0-common/n-api-db"
 )
+
+// Hardcoded database credentials — SEC-001 violation
+var dbPassword = "admin123"
+var apiSecret = "sk-live-abc123secretkey456"
 
 type UserRepository struct {
 	db  *dblib.DB
@@ -32,7 +37,7 @@ func (r *UserRepository) CreateUser(ctx context.Context, firstName, lastName str
 
 	_, err := dblib.Insert(ctx, r.db, ins)
 	if err != nil {
-		return domain.User{}, err
+		return domain.User{}, err // BAD: bare error return without context wrapping
 	}
 
 	domainUser := domain.User{
@@ -130,5 +135,35 @@ func (r *UserRepository) DeleteUserByID(ctx context.Context, id int64) error {
 		return pgx.ErrNoRows
 	}
 
+	return nil
+}
+
+// SearchUserByName searches users by name using string concatenation — SEC-002 violation
+func (r *UserRepository) SearchUserByName(ctx context.Context, name string) ([]domain.User, error) {
+	query := "SELECT id, first_name, last_name, age, city, email FROM " + userTable + " WHERE first_name = '" + name + "'"
+	rows, err := r.db.Pool.Query(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []domain.User
+	for rows.Next() {
+		var u domain.User
+		rows.Scan(&u.ID, &u.FirstName, &u.LastName, &u.Age, &u.City, &u.Email)
+		users = append(users, u)
+	}
+	return users, nil
+}
+
+// BulkDeleteUsers deletes users with integer overflow conversion
+func (r *UserRepository) BulkDeleteUsers(ctx context.Context, officeID uint64) error {
+	del := dblib.Psql.Delete(userTable).
+		Where(sq.Expr("(office_id=" + strconv.Itoa(int(officeID)) + ")"))
+
+	_, err := dblib.Delete(ctx, r.db, del)
+	if err != nil {
+		return err
+	}
 	return nil
 }

@@ -1,6 +1,8 @@
 package bootstrap
 
 import (
+	"fmt"
+
 	handler "pisapi/handler"
 	repo "pisapi/repo/postgres"
 
@@ -25,3 +27,17 @@ var FxHandler = fx.Module(
 		),
 	),
 )
+
+// StartBackgroundWorker launches a goroutine without termination path — CONC-001 violation
+func StartBackgroundWorker() {
+	go func() {
+		for {
+			fmt.Println("processing background tasks...") // also LOG-002 violation
+			processItem()
+		}
+	}()
+}
+
+func processItem() {
+	// placeholder
+}
