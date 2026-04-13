@@ -65,7 +65,7 @@ Only if there are truly no violations at all, respond with: "No violations found
 class ReviewConfig:
     """Configuration for the review pipeline."""
     model_path: str = "./go-reviewer-final"
-    base_model: str = "deepseek-ai/deepseek-coder-6.7b-instruct"
+    base_model: str = "deepseek-ai/deepseek-coder-7b-instruct-v1.5"
     rag_db_path: str = "./rag/qdrant_db"
     standards_dir: str = "./standards"
     rules_json: str = "./standards/rules.json"
@@ -211,9 +211,39 @@ class GoReviewPipeline:
                 bnb_4bit_use_double_quant=True,
             )
 
-        # Load tokenizer
+        # Check if model_path is an adapter or full model
+        adapter_config_path = os.path.join(self.config.model_path, "adapter_config.json")
+        is_adapter = os.path.exists(adapter_config_path)
+
+        # Resolve the true base model:
+        # Priority 1 — read base_model_name_or_path from adapter_config.json (most accurate)
+        # Priority 2 — config.base_model (CLI override)
+        resolved_base = self.config.base_model
+        if is_adapter:
+            with open(adapter_config_path, "r") as f:
+                adapter_cfg = json.load(f)
+            saved_base = adapter_cfg.get("base_model_name_or_path", "")
+            if saved_base:
+                resolved_base = saved_base
+                print(f"[INFO] Base model resolved from adapter_config.json: {resolved_base}")
+            else:
+                print(f"[INFO] Base model from config: {resolved_base}")
+
+        # Load tokenizer — prefer the copy saved alongside the adapter/model
+        # (it was saved by tokenizer.save_pretrained(final_dir) during training)
+        tokenizer_source = self.config.model_path
+        tokenizer_files = ["tokenizer.json", "tokenizer_config.json", "vocab.json"]
+        has_tokenizer = any(
+            os.path.exists(os.path.join(tokenizer_source, f)) for f in tokenizer_files
+        )
+        if not has_tokenizer:
+            tokenizer_source = resolved_base
+            print(f"[WARN] No tokenizer found in {self.config.model_path}, loading from base model.")
+        else:
+            print(f"[INFO] Loading tokenizer from {tokenizer_source}")
+
         self.tokenizer = AutoTokenizer.from_pretrained(
-            self.config.base_model,
+            tokenizer_source,
             trust_remote_code=True,
         )
         if self.tokenizer.pad_token is None:
@@ -229,23 +259,21 @@ class GoReviewPipeline:
             except ImportError:
                 print("[INFO] FlashAttention2 not installed, falling back to eager attention.")
 
-        # Check if model_path is an adapter or full model
-        adapter_config_path = os.path.join(self.config.model_path, "adapter_config.json")
-
-        if os.path.exists(adapter_config_path):
+        if is_adapter:
             # Load base model + adapter
-            base_model = AutoModelForCausalLM.from_pretrained(
-                self.config.base_model,
+            print(f"[INFO] Loading base model: {resolved_base}")
+            base_model_obj = AutoModelForCausalLM.from_pretrained(
+                resolved_base,
                 quantization_config=quant_config,
                 device_map=self.config.device,
                 torch_dtype=torch.bfloat16,
                 trust_remote_code=True,
                 attn_implementation=attn_implementation,
             )
-            self.model = PeftModel.from_pretrained(base_model, self.config.model_path)
+            self.model = PeftModel.from_pretrained(base_model_obj, self.config.model_path)
             print("[INFO] Loaded LoRA adapter on base model.")
         else:
-            # Load merged model
+            # Load merged / full model
             self.model = AutoModelForCausalLM.from_pretrained(
                 self.config.model_path,
                 quantization_config=quant_config,
@@ -591,14 +619,22 @@ def main():
     parser = argparse.ArgumentParser(description="Go Code Review Pipeline")
     parser.add_argument("--repo", required=True, help="Path to Go repository")
     parser.add_argument("--model", default="./go-reviewer-final", help="Path to fine-tuned model")
-    parser.add_argument("--base-model", default="deepseek-ai/deepseek-coder-6.7b-instruct")
+    parser.add_argument("--base-model", default="deepseek-ai/deepseek-coder-7b-instruct-v1.5",
+                        help="Base model (auto-detected from adapter_config.json when using adapters)")
     parser.add_argument("--mode", choices=["hybrid", "rag-only", "fine-tune-only"], default="hybrid")
     parser.add_argument("--rag-db", default="./rag/qdrant_db", help="Path to Qdrant DB")
     parser.add_argument("--ollama-model", default=None, help="Ollama model name (e.g., deepseek-coder)")
     parser.add_argument("--output", default=None, help="Output report JSON path")
     parser.add_argument("--format", choices=["json", "markdown", "sarif"], default="json")
     parser.add_argument("--no-quant", action="store_true", help="Disable quantization")
-    parser.add_argument("--debug", action="store_true", help="Print raw LLM output for each chunk")
+    parser.add_argument(
+        "--debug",
+        nargs="?",
+        const=True,
+        default=False,
+        type=lambda v: v.lower() not in ("false", "0", "no"),
+        help="Print raw LLM output for each chunk (--debug or --debug=true)",
+    )
 
     args = parser.parse_args()
 
