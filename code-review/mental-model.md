@@ -50,3 +50,16 @@ Division of Responsibility (Rule of Thumb)
 If it changes often or is policy text → RAG.
 If it is stable response behavior/style → Fine-tune.
 If uncertain: put rule text in RAG first; only fine-tune after repeated failures.
+
+
+If bottleneck = memory
+
+→ Use QLoRA
+
+If bottleneck = throughput / speed
+
+→ Use LoRA
+
+If bottleneck = model quality ceiling
+
+→ Use full fine-tuning

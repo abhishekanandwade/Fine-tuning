@@ -66,7 +66,7 @@ Be precise. Do not invent issues. Only flag real violations of the provided stan
 @dataclass
 class ReviewConfig:
     """Configuration for the review pipeline."""
-    model_path: str = "./models/go-reviewer"
+    model_path: str = "./go-reviewer-final"
     base_model: str = "deepseek-ai/deepseek-coder-6.7b-instruct"
     rag_db_path: str = "./rag/qdrant_db"
     standards_dir: str = "./standards"
