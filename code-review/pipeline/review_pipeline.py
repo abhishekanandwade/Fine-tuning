@@ -442,6 +442,13 @@ Report EVERY violation you find using the format in the system prompt.
             try:
                 docs = self.retriever.retrieve(code, top_k=self.config.top_k)
                 rules_context = self.retriever.format_rules_for_prompt(docs)
+                
+                if self.config.debug:
+                    print(f"\n{'\u2500'*60}")
+                    print(f"[DEBUG] Retrieved rules for {chunk_name}:")
+                    for doc in docs:
+                        print(f"  - {doc.metadata.get('rule_id', 'unknown')}: {doc.content[:100]}...")
+                    print(f"{'\u2500'*60}\n")
             except Exception as e:
                 print(f"[WARN] RAG retrieval failed for {chunk_name}: {e}")
 
@@ -451,6 +458,11 @@ Report EVERY violation you find using the format in the system prompt.
 
         # ── Build prompt and generate ──
         user_prompt = self._build_prompt(code, rules_context)
+        if self.config.debug:
+            print(f"\n{'\u2500'*60}")
+            print(f"[DEBUG] User prompt for {chunk_name}:")
+            print(user_prompt)
+            print(f"{'\u2500'*60}\n")
         print(f"  [INFO] Running inference for {chunk_name}...")
 
         if self.config.mode == "rag-only":
