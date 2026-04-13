@@ -139,6 +139,119 @@ def parse_findings(review_text: str) -> List[Dict]:
         }
         findings.append(finding)
 
+    # ── Fallback: handle non-standard model output formats ──
+    # Triggered when the primary pattern finds nothing.
+    # Catches formats like:
+    #   [VIOLATION][EH-001] HIGH ...
+    #   [EH-001] HIGH Violation: ...
+    #   ### EH-001: [VIOLATION] ...
+    if not findings:
+        findings = _parse_findings_fallback(review_text)
+
+    return findings
+
+
+_CATEGORY_MAP = {
+    "eh": "error_handling",
+    "ctx": "context_usage",
+    "log": "logging",
+    "sec": "security",
+    "nam": "naming",
+    "conc": "concurrency",
+    "test": "testing",
+    "perf": "performance",
+    "doc": "documentation",
+}
+
+_SEVERITY_RE = re.compile(r"\b(CRITICAL|HIGH|MEDIUM|LOW|INFO)\b", re.IGNORECASE)
+_RULE_RE = re.compile(r"\[?(SEC|EH|CTX|LOG|NAM|CONC|TEST|PERF|DOC)-(\d+)\]?", re.IGNORECASE)
+_FILE_RE = re.compile(
+    r"(?:\*\*File:\*\*|File:)\s*`?([^\s`\n:]+\.go)(?::(\d+))?", re.IGNORECASE
+)
+_FUNC_RE = re.compile(r"(?:\*\*Function:\*\*|Function:)\s*`?([^\s`\n]+)", re.IGNORECASE)
+_SKIP_RE = re.compile(r"(#N/A|N/?A|no\s+violation|not\s+found|none\s+found)", re.IGNORECASE)
+
+
+def _parse_findings_fallback(text: str) -> List[Dict]:
+    """
+    Lenient parser for non-standard model output.
+
+    Scans the text for every [RULE-ID] mention.  For each one, it checks
+    whether the surrounding context marks it as a real violation (presence of
+    'VIOLATION', a severity keyword, or 'Found here') and whether it is
+    explicitly cleared (N/A, no violation).
+    """
+    findings: List[Dict] = []
+    seen_rule_ids: set = set()
+
+    for match in _RULE_RE.finditer(text):
+        rule_id = f"{match.group(1).upper()}-{match.group(2)}"
+
+        # Grab ~300 chars of context around the rule ID
+        ctx_start = max(0, match.start() - 80)
+        ctx_end = min(len(text), match.end() + 300)
+        context = text[ctx_start:ctx_end]
+
+        # Skip if this instance is clearly marked as not applicable
+        if _SKIP_RE.search(context):
+            continue
+
+        # Require positive evidence: "VIOLATION" keyword or a severity word
+        is_violation = bool(re.search(r"VIOLATION|Found\s+here", context, re.IGNORECASE))
+        has_severity = bool(_SEVERITY_RE.search(context))
+        if not (is_violation or has_severity):
+            continue
+
+        # Deduplicate by rule ID (take first occurrence)
+        if rule_id in seen_rule_ids:
+            continue
+        seen_rule_ids.add(rule_id)
+
+        # Severity
+        sev_match = _SEVERITY_RE.search(context)
+        severity = sev_match.group(1).upper() if sev_match else "MEDIUM"
+
+        # File + line number
+        file_match = _FILE_RE.search(context)
+        file_path = file_match.group(1).strip() if file_match else ""
+        line_num = int(file_match.group(2)) if file_match and file_match.group(2) else 0
+
+        # Function name
+        func_match = _FUNC_RE.search(context)
+        function_name = func_match.group(1).strip() if func_match else ""
+
+        # Build a short title from text immediately after the rule ID / severity
+        title_ctx = text[match.end(): match.end() + 120]
+        title_ctx = re.sub(r"^\s*[\]:]?\s*(?:CRITICAL|HIGH|MEDIUM|LOW|INFO)?\s*", "", title_ctx, flags=re.IGNORECASE)
+        title = re.split(r"[\n\[\*]", title_ctx)[0].strip()[:80] or rule_id
+
+        # Description — grab more context after the match
+        desc_ctx = text[match.start(): min(len(text), match.end() + 400)]
+        desc_match = re.search(
+            r"(?:Issue|issue|Description|description)[\s:*]+(.+?)(?=\n\*\*|\n\[|\n##|\Z)",
+            desc_ctx, re.DOTALL,
+        )
+        description = desc_match.group(1).strip()[:500] if desc_match else title
+
+        prefix = rule_id.split("-")[0].lower()
+        category = _CATEGORY_MAP.get(prefix, "general")
+
+        findings.append({
+            "rule_id": rule_id,
+            "severity": severity,
+            "category": category,
+            "title": title,
+            "file": file_path,
+            "line_start": line_num,
+            "line_end": line_num,
+            "function": function_name,
+            "description": description,
+            "current_code": "",
+            "suggested_fix": "",
+            "effort": "unknown",
+            "auto_fixable": False,
+        })
+
     return findings
 
 

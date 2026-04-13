@@ -34,6 +34,23 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from peft import PeftModel
 
 
+def _clean_bpe_artifacts(text: str) -> str:
+    """
+    Replace byte-level BPE substitutions that appear when the decode tokenizer
+    is mismatched.  GPT-2 / DeepSeek byte-level BPE maps:
+        U+0120 (Ġ) → ASCII space
+        U+010A (Ċ) → newline
+    Also fixes common multi-byte UTF-8 mojibake sequences.
+    """
+    text = text.replace('\u0120', ' ')    # Ġ → space
+    text = text.replace('\u010a', '\n')   # Ċ → newline
+    text = text.replace('âĢĶ', '—')       # mojibake em-dash
+    text = text.replace('\u00e2\u0080\u0094', '—')
+    text = text.replace('â€"', '—')
+    text = text.replace('âĢĵ', '–')
+    return text
+
+
 # ── Configuration ────────────────────────────────────────────────────────────
 
 SYSTEM_PROMPT = """You are an expert Go code reviewer. Your job is to find ALL violations in the code.
@@ -369,6 +386,7 @@ Report EVERY violation you find using the format in the system prompt.
         # Decode only the generated tokens
         generated = outputs[0][inputs["input_ids"].shape[-1]:]
         response = self.tokenizer.decode(generated, skip_special_tokens=True)
+        response = _clean_bpe_artifacts(response)
         return response.strip()
 
     def _generate_with_ollama(self, system: str, user: str) -> str:
