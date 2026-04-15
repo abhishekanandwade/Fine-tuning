@@ -692,13 +692,21 @@ def main():
         output_data = generate_sarif_report(report)
 
     if args.output:
-        os.makedirs(os.path.dirname(os.path.abspath(args.output)), exist_ok=True)
-        with open(args.output, "w", encoding="utf-8") as f:
+        # Resolve relative paths against CWD at the time the CLI is invoked,
+        # not the script's own directory (avoids writing to / in containers).
+        output_path = (
+            args.output if os.path.isabs(args.output)
+            else os.path.join(os.getcwd(), args.output)
+        )
+        parent_dir = os.path.dirname(output_path)
+        if parent_dir:
+            os.makedirs(parent_dir, exist_ok=True)
+        with open(output_path, "w", encoding="utf-8") as f:
             if isinstance(output_data, str):
                 f.write(output_data)
             else:
                 json.dump(output_data, f, indent=2, default=str)
-        print(f"[INFO] Report saved to {args.output}")
+        print(f"[INFO] Report saved to {output_path}")
     else:
         if isinstance(output_data, str):
             print(output_data)
