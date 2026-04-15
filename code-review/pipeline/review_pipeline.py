@@ -646,6 +646,11 @@ Report EVERY violation you find using the format in the system prompt.
 # ── CLI ──────────────────────────────────────────────────────────────────────
 
 def main():
+    # Capture CWD immediately — before any os.chdir() could change it.
+    # All relative output paths are resolved against this directory, including
+    # ones the user writes as "/output" (treated as relative, not absolute).
+    invocation_dir = os.getcwd()
+
     parser = argparse.ArgumentParser(description="Go Code Review Pipeline")
     parser.add_argument("--repo", required=True, help="Path to Go repository")
     parser.add_argument("--model", default="./go-reviewer-final", help="Path to fine-tuned model")
@@ -692,12 +697,13 @@ def main():
         output_data = generate_sarif_report(report)
 
     if args.output:
-        # Resolve relative paths against CWD at the time the CLI is invoked,
-        # not the script's own directory (avoids writing to / in containers).
-        output_path = (
-            args.output if os.path.isabs(args.output)
-            else os.path.join(os.getcwd(), args.output)
-        )
+        # Always treat the output path as relative to where the user invoked
+        # the script (invocation_dir).  Strip any leading '/' so that paths
+        # like '/output/report.json' are NOT interpreted as filesystem-root
+        # absolute paths — they are treated as 'output/report.json' relative
+        # to the invocation directory.
+        cleaned = args.output.lstrip('/').lstrip('\\')
+        output_path = os.path.join(invocation_dir, cleaned)
         parent_dir = os.path.dirname(output_path)
         if parent_dir:
             os.makedirs(parent_dir, exist_ok=True)
