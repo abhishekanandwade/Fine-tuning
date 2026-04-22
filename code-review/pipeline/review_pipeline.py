@@ -88,8 +88,9 @@ class ReviewConfig:
     rules_json: str = "./standards/rules.json"
     mode: str = "hybrid"  # "hybrid", "rag-only", "fine-tune-only"
     max_new_tokens: int = 2048
-    temperature: float = 0.3          # raised from 0.1 — improves recall at slight precision cost
-    top_p: float = 0.95
+    temperature: float = 0.0           # 0.0 = greedy/deterministic; raise for more varied output
+    top_p: float = 1.0                 # no nucleus filtering when temperature=0
+    seed: int = 42                     # RNG seed for reproducibility
     top_k: int = 5  # Number of rules to retrieve per chunk
     batch_size: int = 1
     use_quantization: bool = True
@@ -175,6 +176,14 @@ class GoReviewPipeline:
                 self._load_ollama()
             else:
                 self._load_local_model()
+
+        # Seed the RNG once after all components are loaded.
+        # Only relevant when temperature > 0 (do_sample=True); greedy
+        # decoding is deterministic regardless of seed.
+        if self.config.temperature > 0:
+            torch.manual_seed(self.config.seed)
+            if torch.cuda.is_available():
+                torch.cuda.manual_seed_all(self.config.seed)
 
         self._loaded = True
         print("[INFO] Pipeline ready.")
