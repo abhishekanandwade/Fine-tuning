@@ -25,7 +25,7 @@ cd "c:\Users\knchaitr\OneDrive - Hewlett Packard Enterprise\CoE Team\Fine-tuning
 Remove-Item -Force "./rag/qdrant_db/.lock" -ErrorAction SilentlyContinue
 
 & "C:/Users/knchaitr/OneDrive - Hewlett Packard Enterprise/CoE Team/Fine-tuning-main/.venv/Scripts/python.exe" 
-pipeline/review_pipeline.py `
+python pipeline/review_pipeline.py `
     --repo ./benchmarks/seeded_repo `
     --output ./results/seeded_review_simple.json `
     --mode rag-only `
@@ -46,4 +46,4 @@ python pipeline/review_pipeline.py `
     --ground-truth ./benchmarks/ground_truth.json `
     --report ./results/seeded_eval_report.json
 
-# test
+#
