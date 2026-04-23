@@ -1,0 +1,189 @@
+[
+  {
+    "rule_id": "EH-001",
+    "category": "error_handling",
+    "severity": "high",
+    "title": "Always wrap errors with context",
+    "description": "Bare error returns lose the call chain context. Use fmt.Errorf with %w to wrap errors so the full trace is preserved for debugging.",
+    "violation_example": "func getUser(id int) (User, error) {\n    u, err := db.Query(id)\n    if err != nil {\n        return User{}, err  // BAD: loses context\n    }\n    return u, nil\n}",
+    "correct_example": "func getUser(id int) (User, error) {\n    u, err := db.Query(id)\n    if err != nil {\n        return User{}, fmt.Errorf(\"getUser id=%d: %w\", id, err)  // GOOD\n    }\n    return u, nil\n}",
+    "reference": "https://go.dev/blog/go1.13-errors",
+    "auto_fixable": true
+  },
+  {
+    "rule_id": "EH-002",
+    "category": "error_handling",
+    "severity": "high",
+    "title": "Never ignore errors",
+    "description": "Every error return must be checked. Ignoring errors leads to silent failures that are extremely hard to debug in production.",
+    "violation_example": "func saveConfig(path string) {\n    data, _ := json.Marshal(config)  // BAD: ignoring error\n    os.WriteFile(path, data, 0644)   // BAD: ignoring error\n}",
+    "correct_example": "func saveConfig(path string) error {\n    data, err := json.Marshal(config)\n    if err != nil {\n        return fmt.Errorf(\"saveConfig marshal: %w\", err)\n    }\n    if err := os.WriteFile(path, data, 0644); err != nil {\n        return fmt.Errorf(\"saveConfig write %s: %w\", path, err)\n    }\n    return nil\n}",
+    "reference": "https://go.dev/doc/effective_go#errors",
+    "auto_fixable": false
+  },
+  {
+    "rule_id": "EH-003",
+    "category": "error_handling",
+    "severity": "high",
+    "title": "No panic in library or service code",
+    "description": "panic should never be used for recoverable error conditions in service or library code. It crashes the entire process and cannot be handled gracefully by callers. Use error returns instead.",
+    "violation_example": "func processPayment(amount float64) {\n    if amount <= 0 {\n        panic(\"invalid amount\")  // BAD: crashes the process\n    }\n}",
+    "correct_example": "func processPayment(amount float64) error {\n    if amount <= 0 {\n        return fmt.Errorf(\"processPayment: amount must be positive, got %v\", amount)\n    }\n    return nil\n}",
+    "reference": "https://go.dev/doc/effective_go#panic",
+    "auto_fixable": false
+  },
+  {
+    "rule_id": "CTX-001",
+    "category": "context_usage",
+    "severity": "high",
+    "title": "Context must be the first parameter",
+    "description": "Functions that accept a context.Context must have it as their first parameter, named ctx. This is a universal Go convention.",
+    "violation_example": "func fetchData(url string, ctx context.Context) ([]byte, error) {\n    // BAD: ctx should be first param\n}",
+    "correct_example": "func fetchData(ctx context.Context, url string) ([]byte, error) {\n    // GOOD: ctx is first param\n}",
+    "reference": "https://pkg.go.dev/context",
+    "auto_fixable": true
+  },
+  {
+    "rule_id": "CTX-002",
+    "category": "context_usage",
+    "severity": "medium",
+    "title": "Never store context in a struct",
+    "description": "context.Context should be passed as a function parameter, never stored in a struct field. Contexts are request-scoped and storing them leads to lifecycle bugs.",
+    "violation_example": "type Server struct {\n    ctx context.Context  // BAD\n    db  *sql.DB\n}",
+    "correct_example": "type Server struct {\n    db *sql.DB\n}\n\nfunc (s *Server) Handle(ctx context.Context, req Request) error {\n    // GOOD: ctx passed per-call\n}",
+    "reference": "https://pkg.go.dev/context",
+    "auto_fixable": false
+  },
+  {
+    "rule_id": "LOG-001",
+    "category": "logging",
+    "severity": "medium",
+    "title": "Use structured logging only",
+    "description": "All logging must use structured logging (slog, zap, zerolog). Never use fmt.Println, fmt.Printf, or log.Println for application logging.",
+    "violation_example": "func handleRequest(r *http.Request) {\n    fmt.Println(\"handling request:\", r.URL.Path)  // BAD\n    log.Printf(\"user %s connected\", userID)        // BAD: unstructured\n}",
+    "correct_example": "func handleRequest(r *http.Request) {\n    slog.Info(\"handling request\",\n        \"path\", r.URL.Path,\n        \"method\", r.Method,\n    )\n}",
+    "reference": "https://pkg.go.dev/log/slog",
+    "auto_fixable": true
+  },
+  {
+    "rule_id": "LOG-002",
+    "category": "logging",
+    "severity": "medium",
+    "title": "No fmt.Println for logging",
+    "description": "fmt.Println writes to stdout without timestamps, levels, or structured fields. It cannot be filtered, sampled, or enriched with context. Use slog or your team's structured logger.",
+    "violation_example": "fmt.Println(\"Payment processed:\", result.ID)",
+    "correct_example": "logger.Info(\"payment processed\", \"payment_id\", result.ID)",
+    "reference": "https://pkg.go.dev/log/slog",
+    "auto_fixable": true
+  },
+  {
+    "rule_id": "SEC-001",
+    "category": "security",
+    "severity": "critical",
+    "title": "No hardcoded secrets or credentials",
+    "description": "Never hardcode passwords, API keys, tokens, or secrets in source code. Use environment variables, secret managers (Vault, AWS Secrets Manager), or config files excluded from VCS.",
+    "violation_example": "const apiKey = \"sk-abc123secretkey\"  // BAD\nvar dbPassword = \"admin123\"            // BAD",
+    "correct_example": "apiKey := os.Getenv(\"API_KEY\")\nif apiKey == \"\" {\n    return fmt.Errorf(\"API_KEY environment variable not set\")\n}",
+    "reference": "https://owasp.org/www-community/vulnerabilities/Use_of_hard-coded_password",
+    "auto_fixable": false
+  },
+  {
+    "rule_id": "SEC-002",
+    "category": "security",
+    "severity": "critical",
+    "title": "Use parameterized queries for SQL",
+    "description": "Never construct SQL queries with string concatenation or fmt.Sprintf. Always use parameterized queries to prevent SQL injection.",
+    "violation_example": "query := fmt.Sprintf(\"SELECT * FROM users WHERE id = '%s'\", userID)  // BAD: SQL injection\nrows, err := db.Query(query)",
+    "correct_example": "rows, err := db.QueryContext(ctx, \"SELECT * FROM users WHERE id = $1\", userID)  // GOOD: parameterized",
+    "reference": "https://owasp.org/www-community/attacks/SQL_Injection",
+    "auto_fixable": false
+  },
+  {
+    "rule_id": "SEC-003",
+    "category": "security",
+    "severity": "critical",
+    "title": "JWT secret must come from environment or secret manager",
+    "description": "JWT signing secrets must never be hardcoded. They must be loaded from environment variables or a secret management system.",
+    "violation_example": "secret := \"mysupersecret123\"\ntoken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)\ntokenString, _ := token.SignedString([]byte(secret))",
+    "correct_example": "secret := os.Getenv(\"JWT_SECRET\")\nif secret == \"\" {\n    return \"\", fmt.Errorf(\"JWT_SECRET env var not set\")\n}\ntoken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)\ntokenString, err := token.SignedString([]byte(secret))",
+    "reference": "https://owasp.org/www-project-web-security-testing-guide/",
+    "auto_fixable": false
+  },
+  {
+    "rule_id": "NAM-001",
+    "category": "naming",
+    "severity": "low",
+    "title": "Use MixedCaps for Go names, not underscores",
+    "description": "Go uses MixedCaps (camelCase/PascalCase) for all names. Underscores are not idiomatic except in test function names (Test_xxx) and cgo.",
+    "violation_example": "var user_name string      // BAD\nfunc get_user_by_id() {}  // BAD",
+    "correct_example": "var userName string       // GOOD\nfunc getUserByID() {}     // GOOD",
+    "reference": "https://go.dev/doc/effective_go#names",
+    "auto_fixable": true
+  },
+  {
+    "rule_id": "NAM-002",
+    "category": "naming",
+    "severity": "low",
+    "title": "Acronyms should be all caps",
+    "description": "Common acronyms like URL, HTTP, ID, API, JSON should be all uppercase or all lowercase, never mixed. Use userID not userId, httpClient not httpClient.",
+    "violation_example": "type HttpClient struct {}  // BAD: Http → HTTP\nvar usrId int              // BAD: Id → ID",
+    "correct_example": "type HTTPClient struct {}  // GOOD\nvar userID int             // GOOD",
+    "reference": "https://go.dev/wiki/CodeReviewComments#initialisms",
+    "auto_fixable": true
+  },
+  {
+    "rule_id": "CONC-001",
+    "category": "concurrency",
+    "severity": "high",
+    "title": "Goroutines must have a clear termination path",
+    "description": "Every goroutine launched must have a clear mechanism to stop (context cancellation, done channel, WaitGroup). Goroutine leaks are silent memory/CPU leaks.",
+    "violation_example": "func startWorker() {\n    go func() {\n        for {\n            processItem()  // BAD: no way to stop this\n        }\n    }()\n}",
+    "correct_example": "func startWorker(ctx context.Context) {\n    go func() {\n        for {\n            select {\n            case <-ctx.Done():\n                return\n            default:\n                processItem()\n            }\n        }\n    }()\n}",
+    "reference": "https://go.dev/blog/pipelines",
+    "auto_fixable": false
+  },
+  {
+    "rule_id": "CONC-002",
+    "category": "concurrency",
+    "severity": "medium",
+    "title": "Use directional channels when possible",
+    "description": "Function parameters should use directional channel types (chan<- T or <-chan T) to express intent and prevent misuse at compile time.",
+    "violation_example": "func producer(ch chan int) {  // BAD: bidirectional, can read too\n    ch <- 42\n}",
+    "correct_example": "func producer(ch chan<- int) {  // GOOD: send-only\n    ch <- 42\n}",
+    "reference": "https://go.dev/doc/effective_go#channels",
+    "auto_fixable": true
+  },
+  {
+    "rule_id": "TEST-001",
+    "category": "testing",
+    "severity": "medium",
+    "title": "Use table-driven tests",
+    "description": "Tests with multiple cases should use the table-driven pattern with subtests. This makes tests readable, easy to extend, and provides clear failure messages.",
+    "violation_example": "func TestAdd(t *testing.T) {\n    if Add(1, 2) != 3 { t.Error(\"1+2\") }\n    if Add(0, 0) != 0 { t.Error(\"0+0\") }\n    if Add(-1, 1) != 0 { t.Error(\"-1+1\") }\n}",
+    "correct_example": "func TestAdd(t *testing.T) {\n    tests := []struct{\n        name string\n        a, b, want int\n    }{\n        {\"positive\", 1, 2, 3},\n        {\"zeros\", 0, 0, 0},\n        {\"negative\", -1, 1, 0},\n    }\n    for _, tt := range tests {\n        t.Run(tt.name, func(t *testing.T) {\n            got := Add(tt.a, tt.b)\n            if got != tt.want {\n                t.Errorf(\"Add(%d, %d) = %d, want %d\", tt.a, tt.b, got, tt.want)\n            }\n        })\n    }\n}",
+    "reference": "https://go.dev/wiki/TableDrivenTests",
+    "auto_fixable": false
+  },
+  {
+    "rule_id": "PERF-001",
+    "category": "performance",
+    "severity": "medium",
+    "title": "Pre-allocate slices when size is known",
+    "description": "When the final size of a slice is known or can be estimated, use make([]T, 0, n) to pre-allocate. This avoids repeated allocations and copying during growth.",
+    "violation_example": "func getNames(users []User) []string {\n    var names []string  // BAD: will grow incrementally\n    for _, u := range users {\n        names = append(names, u.Name)\n    }\n    return names\n}",
+    "correct_example": "func getNames(users []User) []string {\n    names := make([]string, 0, len(users))  // GOOD: pre-allocated\n    for _, u := range users {\n        names = append(names, u.Name)\n    }\n    return names\n}",
+    "reference": "https://go.dev/doc/effective_go#allocation_make",
+    "auto_fixable": true
+  },
+  {
+    "rule_id": "DOC-001",
+    "category": "documentation",
+    "severity": "low",
+    "title": "Exported functions must have doc comments",
+    "description": "Every exported function, type, constant, and variable must have a doc comment starting with the name of the element. This is required by godoc and golint.",
+    "violation_example": "func ProcessOrder(o Order) error {  // BAD: no doc comment\n    // ...\n}",
+    "correct_example": "// ProcessOrder validates and submits the given order to the\n// payment gateway. It returns an error if validation or payment fails.\nfunc ProcessOrder(o Order) error {\n    // ...\n}",
+    "reference": "https://go.dev/doc/effective_go#commentary",
+    "auto_fixable": false
+  }
+]

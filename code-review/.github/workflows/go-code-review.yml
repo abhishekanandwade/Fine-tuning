@@ -1,0 +1,232 @@
+# ─── Go Code Reviewer — GitHub Actions CI/CD Workflow ──────────────────────
+#
+# Runs on every PR that modifies .go files.
+# Uses the go-code-reviewer to produce SARIF findings and
+# uploads them to GitHub Code Scanning.
+#
+# Prerequisites:
+#   - Self-hosted runner with GPU (or use Ollama fallback)
+#   - Model artifacts stored as GitHub release or in container registry
+#   - RAG vector store pre-built and cached
+# ───────────────────────────────────────────────────────────────────────────
+
+name: Go Code Review
+
+on:
+  pull_request:
+    paths:
+      - '**.go'
+      - 'go.mod'
+      - 'go.sum'
+
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Review mode'
+        required: false
+        default: 'hybrid'
+        type: choice
+        options:
+          - hybrid
+          - rag-only
+          - fine-tune-only
+      repo_path:
+        description: 'Repository path (for manual runs)'
+        required: false
+        default: '.'
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write  # For SARIF upload
+
+env:
+  PYTHON_VERSION: '3.11'
+  REVIEWER_IMAGE: 'go-code-reviewer:latest'
+  REVIEW_MODE: ${{ github.event.inputs.mode || 'hybrid' }}
+
+jobs:
+  # ── Job 1: Run the code review ──────────────────────────────────────────
+  review:
+    name: Code Review
+    runs-on: [self-hosted, gpu]  # Requires GPU runner; change to ubuntu-latest for Ollama mode
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for diff analysis
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Cache Python dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-reviewer-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-reviewer-
+
+      - name: Cache RAG vector store
+        uses: actions/cache@v4
+        with:
+          path: ./rag/qdrant_db
+          key: rag-vectorstore-${{ hashFiles('standards/**') }}
+          restore-keys: |
+            rag-vectorstore-
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build RAG vector store (if needed)
+        run: |
+          python -m cli.review build-rag \
+            --standards-dir ./standards \
+            --rules-json ./standards/rules.json \
+            --db-path ./rag/qdrant_db
+
+      # ── Option A: Use local fine-tuned model (GPU runner) ──
+      - name: Download model artifacts
+        if: env.REVIEW_MODE != 'rag-only'
+        run: |
+          # Download from HuggingFace Hub, GitHub Releases, or S3
+          # Adjust this to your model hosting setup
+          echo "Model path: ./models/go-reviewer"
+          # Example: huggingface-cli download your-org/go-reviewer --local-dir ./models/go-reviewer
+        continue-on-error: true
+
+      # ── Option B: Use Ollama (CPU/lighter GPU) ──
+      # Uncomment the following steps if using Ollama instead of local model
+      # - name: Install Ollama
+      #   run: |
+      #     curl -fsSL https://ollama.com/install.sh | sh
+      #     ollama pull deepseek-coder:6.7b
+      #   env:
+      #     OLLAMA_HOST: 0.0.0.0
+
+      # ── Get changed files ──
+      - name: Get changed Go files
+        id: changed-files
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            CHANGED=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} -- '*.go' | head -100)
+          else
+            CHANGED=$(find . -name '*.go' -not -path './vendor/*' | head -100)
+          fi
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "count=$(echo "$CHANGED" | grep -c '\.go$' || echo 0)" >> $GITHUB_OUTPUT
+
+      - name: Skip if no Go files changed
+        if: steps.changed-files.outputs.count == '0'
+        run: echo "No Go files changed. Skipping review."
+
+      # ── Run review ──
+      - name: Run Go code review
+        if: steps.changed-files.outputs.count != '0'
+        run: |
+          python -m cli.review repo . \
+            --mode ${{ env.REVIEW_MODE }} \
+            --format sarif \
+            --output review-results.sarif \
+            --model ./models/go-reviewer \
+            --rag-db ./rag/qdrant_db
+
+      - name: Generate Markdown report
+        if: steps.changed-files.outputs.count != '0'
+        run: |
+          python -m cli.review repo . \
+            --mode ${{ env.REVIEW_MODE }} \
+            --format markdown \
+            --output review-report.md \
+            --model ./models/go-reviewer \
+            --rag-db ./rag/qdrant_db
+
+      # ── Upload SARIF to GitHub Code Scanning ──
+      - name: Upload SARIF results
+        if: steps.changed-files.outputs.count != '0' && always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: review-results.sarif
+          category: go-code-review
+
+      # ── Post PR comment ──
+      - name: Post review comment on PR
+        if: github.event_name == 'pull_request' && steps.changed-files.outputs.count != '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('review-report.md', 'utf8');
+
+            // Truncate if too long for PR comment
+            const maxLen = 60000;
+            const body = report.length > maxLen
+              ? report.substring(0, maxLen) + '\n\n*...report truncated. See full SARIF results in Code Scanning.*'
+              : report;
+
+            // Find existing comment to update
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const botComment = comments.find(c =>
+              c.body.includes('Go Code Review Report') && c.user.type === 'Bot'
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body,
+              });
+            }
+
+      # ── Upload artifacts ──
+      - name: Upload review artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-results
+          path: |
+            review-results.sarif
+            review-report.md
+          retention-days: 30
+
+      # ── Fail on critical findings ──
+      - name: Check for critical findings
+        if: steps.changed-files.outputs.count != '0'
+        run: |
+          if [ -f review-results.sarif ]; then
+            CRITICAL=$(python3 -c "
+            import json
+            with open('review-results.sarif') as f:
+                sarif = json.load(f)
+            errors = [r for run in sarif.get('runs', [])
+                       for r in run.get('results', [])
+                       if r.get('level') == 'error']
+            print(len(errors))
+            ")
+            echo "Critical/High findings: $CRITICAL"
+            if [ "$CRITICAL" -gt 0 ]; then
+              echo "::error::Found $CRITICAL critical/high severity findings. Please review."
+              exit 1
+            fi
+          fi

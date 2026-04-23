@@ -1,0 +1,351 @@
+{
+  "aggregate": {
+    "files": 18,
+    "true_positives": 9,
+    "false_positives": 1,
+    "false_negatives": 8,
+    "precision": 0.9,
+    "recall": 0.5294,
+    "f1_score": 0.6667,
+    "false_positive_rate": 0.1,
+    "clean_file_accuracy": 1.0
+  },
+  "per_rule": {
+    "CONC-001": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "CONC-002": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "CTX-001": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "CTX-002": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "DOC-001": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "EH-001": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "EH-002": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "EH-003": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "LOG-001": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "LOG-002": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "NAM-001": {
+      "tp": 0,
+      "fp": 1,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "NAM-002": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "PERF-001": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "SEC-001": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "SEC-002": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "SEC-003": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "TEST-001": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    }
+  },
+  "per_file": [
+    {
+      "file": "sec001_hardcoded.go",
+      "expected": [
+        "SEC-001"
+      ],
+      "predicted": [
+        "SEC-001"
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "status": "PASS"
+    },
+    {
+      "file": "sec002_sqli.go",
+      "expected": [
+        "SEC-002"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "status": "MISS"
+    },
+    {
+      "file": "sec003_jwt_secret.go",
+      "expected": [
+        "SEC-003"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "status": "MISS"
+    },
+    {
+      "file": "eh001_bare_return.go",
+      "expected": [
+        "EH-001"
+      ],
+      "predicted": [
+        "EH-001"
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "status": "PASS"
+    },
+    {
+      "file": "eh002_ignored_error.go",
+      "expected": [
+        "EH-002"
+      ],
+      "predicted": [
+        "EH-002"
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "status": "PASS"
+    },
+    {
+      "file": "eh003_panic.go",
+      "expected": [
+        "EH-003"
+      ],
+      "predicted": [
+        "EH-003"
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "status": "PASS"
+    },
+    {
+      "file": "ctx001_ctx_not_first.go",
+      "expected": [
+        "CTX-001"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "status": "MISS"
+    },
+    {
+      "file": "ctx002_ctx_in_struct.go",
+      "expected": [
+        "CTX-002"
+      ],
+      "predicted": [
+        "CTX-002"
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "status": "PASS"
+    },
+    {
+      "file": "log001_println.go",
+      "expected": [
+        "LOG-001"
+      ],
+      "predicted": [
+        "LOG-001"
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "status": "PASS"
+    },
+    {
+      "file": "log002_printf.go",
+      "expected": [
+        "LOG-002"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "status": "MISS"
+    },
+    {
+      "file": "nam001_underscore.go",
+      "expected": [
+        "NAM-001"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "status": "MISS"
+    },
+    {
+      "file": "nam002_acronym.go",
+      "expected": [
+        "NAM-002"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "status": "MISS"
+    },
+    {
+      "file": "conc001_goroutine.go",
+      "expected": [
+        "CONC-001"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "status": "MISS"
+    },
+    {
+      "file": "conc002_bidirectional.go",
+      "expected": [
+        "CONC-002"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "status": "MISS"
+    },
+    {
+      "file": "test001_no_table.go",
+      "expected": [
+        "TEST-001"
+      ],
+      "predicted": [
+        "TEST-001"
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "status": "PASS"
+    },
+    {
+      "file": "perf001_slice_alloc.go",
+      "expected": [
+        "PERF-001"
+      ],
+      "predicted": [
+        "NAM-001",
+        "PERF-001"
+      ],
+      "tp": 1,
+      "fp": 1,
+      "fn": 0,
+      "status": "NOISE"
+    },
+    {
+      "file": "doc001_no_comment.go",
+      "expected": [
+        "DOC-001"
+      ],
+      "predicted": [
+        "DOC-001"
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "status": "PASS"
+    },
+    {
+      "file": "clean_code.go",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "status": "PASS"
+    }
+  ]
+}

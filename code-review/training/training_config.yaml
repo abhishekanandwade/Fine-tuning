@@ -1,0 +1,66 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Go Code Reviewer — Training Configuration
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# Usage:
+#   python training/fine_tune_go_reviewer.py --config training/training_config.yaml
+#
+# For 7B models (prototyping):  Use as-is
+# For 33B models (production):  Reduce batch_size to 1, increase grad_accum to 16
+
+model:
+  # Recommended models (in order of quality):
+  # - deepseek-ai/deepseek-coder-33b-instruct     (best, needs 2x A100)
+  # - Qwen/Qwen2.5-Coder-32B-Instruct             (strong, needs 2x A100)
+  # - codellama/CodeLlama-13b-Instruct-hf          (budget, 1x RTX 4090)
+  # - deepseek-ai/deepseek-coder-7b-instruct-v1.5  (fast iteration, 1x RTX 3090)
+  name: "deepseek-ai/deepseek-coder-7b-instruct-v1.5"
+  trust_remote_code: true
+
+quantization:
+  load_in_4bit: true
+  bnb_4bit_quant_type: "nf4"          # NormalFloat4 — better than FP4
+  bnb_4bit_compute_dtype: "bfloat16"  # or float16 for older GPUs
+  bnb_4bit_use_double_quant: true     # Nested quantization — saves ~0.4 bits/param
+
+lora:
+  r: 64                               # Rank — 64 is good for code review tasks
+  lora_alpha: 128                      # Scaling = lora_alpha / r = 2.0
+  lora_dropout: 0.05
+  bias: "none"
+  task_type: "CAUSAL_LM"
+  target_modules:
+    - "q_proj"
+    - "k_proj"
+    - "v_proj"
+    - "o_proj"
+    - "gate_proj"
+    - "up_proj"
+    - "down_proj"
+
+training:
+  output_dir: "./go-reviewer-model"
+  num_train_epochs: 3
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 4       # ~2 steps/epoch with 21 examples: effective_batch=8
+  gradient_checkpointing: true
+  learning_rate: 0.0002
+  lr_scheduler_type: "cosine"
+  warmup_ratio: 0.05
+  max_seq_length: 2048                 # Reduced for small dataset; raise for production
+  packing: false
+  fp16: false
+  bf16: true
+  logging_steps: 1                     # Log every step (small dataset)
+  eval_strategy: "epoch"              # Evaluate once per epoch — avoids eval_steps > total_steps
+  save_strategy: "epoch"              # Save once per epoch
+  save_total_limit: 3
+  load_best_model_at_end: true
+  report_to: "none"                    # Set to "wandb" if wandb is configured
+
+dataset:
+  train_file: "dataset/processed/train.jsonl"
+  validation_file: "dataset/processed/validation.jsonl"
+
+output:
+  final_model_dir: "./go-reviewer-final"
