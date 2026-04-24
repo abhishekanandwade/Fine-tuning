@@ -158,6 +158,7 @@ class GoReviewPipeline:
         self.model = None
         self.tokenizer = None
         self.retriever = None
+        self.multi_agent = None  # LangGraph MultiAgentReviewer when rag_mode=="agentic"
         self._loaded = False
 
     def load(self):
@@ -183,6 +184,12 @@ class GoReviewPipeline:
 
     def close(self) -> None:
         """Release resources (model, retriever) explicitly."""
+        if self.multi_agent is not None:
+            try:
+                self.multi_agent.close()
+            except Exception:
+                pass
+            self.multi_agent = None
         if self.retriever is not None:
             try:
                 self.retriever.close()
@@ -201,7 +208,7 @@ class GoReviewPipeline:
         self.close()
 
     def _load_retriever(self):
-        """Initialize the RAG retriever (simple or agentic)."""
+        """Initialize the RAG retriever (simple or multi-agent LangGraph)."""
         try:
             from rag.retriever import GoStandardsRetriever
             base = GoStandardsRetriever(
@@ -210,19 +217,24 @@ class GoReviewPipeline:
             )
             print(f"[INFO] RAG retriever loaded from {self.config.rag_db_path}")
 
+            # Base retriever always available for single-shot RAG prompts.
+            self.retriever = base
+
             if self.config.rag_mode == "agentic":
-                # Wrap the simple retriever with the agentic planner/verifier.
-                # The agent reuses our existing _generate() backend so it works
-                # transparently with both Ollama and the local fine-tuned model.
-                from rag.agentic_retriever import AgenticGoStandardsRetriever
-                self.retriever = AgenticGoStandardsRetriever(
-                    base_retriever=base,
+                # Build the LangGraph multi-agent orchestrator on top of the
+                # base vector-store retriever. Repo path is set later in
+                # review_repository / review_file.
+                from rag.langgraph_agents import MultiAgentReviewer
+                self.multi_agent = MultiAgentReviewer(
+                    rag_retriever=base,
                     generate_fn=self._generate,
+                    repo_path=".",  # rebound per-run
                     debug=self.config.debug,
                 )
-                print("[INFO] RAG mode: AGENTIC (plan → multi-retrieve → review → verify)")
+                print("[INFO] RAG mode: AGENTIC (LangGraph multi-agent — "
+                      "security, architecture, performance, observability, database, concurrency)")
             else:
-                self.retriever = base
+                self.multi_agent = None
                 print("[INFO] RAG mode: SIMPLE (single-shot retrieval)")
         except Exception as e:
             print(f"[WARN] Failed to load RAG retriever: {e}")
@@ -230,6 +242,7 @@ class GoReviewPipeline:
                 raise
             print("[WARN] Falling back to fine-tune-only mode.")
             self.config.mode = "fine-tune-only"
+            self.multi_agent = None
 
     def _load_local_model(self):
         """Load the fine-tuned model and tokenizer."""
@@ -454,18 +467,38 @@ Report EVERY violation you find using the format in the system prompt.
         """
         start = time.time()
 
-        # ── Retrieve relevant rules via RAG ──
+        # ── Agentic (LangGraph multi-agent) path ──
+        if self.config.rag_mode == "agentic" and self.multi_agent is not None:
+            print(f"  [INFO] Running multi-agent review for {chunk_name}...")
+            try:
+                findings = self.multi_agent.review_code(code=code, file_path=file_path)
+            except Exception as e:
+                print(f"  [WARN] Multi-agent review failed for {chunk_name}: {e}")
+                findings = []
+            for f in findings:
+                if file_path:
+                    f["file"] = file_path
+            elapsed = time.time() - start
+            return ReviewResult(
+                chunk_name=chunk_name,
+                chunk_file=file_path,
+                raw_review="[multi-agent orchestration — see findings]",
+                findings=findings,
+                elapsed_seconds=round(elapsed, 2),
+            )
+
+        # ── Simple RAG / hybrid / fine-tune-only path ──
         rules_context = ""
         if self.retriever and self.config.mode in ("hybrid", "rag-only"):
             try:
                 docs = self.retriever.retrieve(code, top_k=self.config.top_k)
                 rules_context = self.retriever.format_rules_for_prompt(docs)
-                
+
                 if self.config.debug:
                     print(f"\n{'\u2500'*60}")
                     print(f"[DEBUG] Retrieved rules for {chunk_name}:")
                     for doc in docs:
-                        print(f"  - {doc.metadata.get('rule_id', 'unknown')}: {doc.content[:100]}...")
+                        print(f"  - {doc.metadata.get('rule_id', 'unknown')}: {doc.page_content[:100]}...")
                     print(f"{'\u2500'*60}\n")
             except Exception as e:
                 print(f"[WARN] RAG retrieval failed for {chunk_name}: {e}")
@@ -506,19 +539,6 @@ Report EVERY violation you find using the format in the system prompt.
         for f in findings:
             if file_path:
                 f["file"] = file_path
-
-        # Agentic RAG: verification pass to drop false positives
-        if (
-            self.config.rag_mode == "agentic"
-            and self.retriever is not None
-            and hasattr(self.retriever, "verify_findings_against_code")
-            and findings
-        ):
-            before = len(findings)
-            findings = self.retriever.verify_findings_against_code(findings, code)
-            dropped = before - len(findings)
-            if dropped > 0:
-                print(f"  [AGENTIC] Verifier dropped {dropped}/{before} finding(s)")
 
         elapsed = time.time() - start
 
@@ -565,6 +585,16 @@ Report EVERY violation you find using the format in the system prompt.
         4. Return consolidated report.
         """
         self.load()
+
+        # Rebind the multi-agent orchestrator to this repo so its tools
+        # (SearchCode, ParseAST, RunGoVet, etc.) operate on the correct tree.
+        if self.multi_agent is not None:
+            try:
+                from rag.agent_tools import build_toolbox
+                self.multi_agent.repo_path = repo_path
+                self.multi_agent.toolbox = build_toolbox(repo_path, self.retriever)
+            except Exception as e:
+                print(f"[WARN] Could not rebind multi-agent toolbox to repo: {e}")
 
         start = time.time()
         print(f"\n{'='*60}")

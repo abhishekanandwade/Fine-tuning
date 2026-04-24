@@ -52,18 +52,30 @@ def group_expected_by_file(gt: Dict) -> Dict[str, Set[str]]:
 
 def score(expected: Dict[str, Set[str]], predicted: Dict[str, Set[str]]) -> Dict:
     per_file = []
-    total_tp = total_fp = total_fn = 0
+    total_tp = total_fp = total_fn = total_tn = 0
     total_clean_correct = 0
     total_clean_files = 0
+    total_files_exact = 0
+
+    # Universe of all rule IDs seen (for per-file TN computation)
+    all_rules: Set[str] = set()
+    for s in expected.values():
+        all_rules |= s
+    for s in predicted.values():
+        all_rules |= s
 
     for fname, exp_rules in expected.items():
         pred_rules = predicted.get(fname, set())
         tp = len(exp_rules & pred_rules)
         fp = len(pred_rules - exp_rules)
         fn = len(exp_rules - pred_rules)
+        tn = len(all_rules - exp_rules - pred_rules)
         total_tp += tp
         total_fp += fp
         total_fn += fn
+        total_tn += tn
+        if exp_rules == pred_rules:
+            total_files_exact += 1
 
         # Negative-test tracking (files with zero expected violations)
         if not exp_rules:
@@ -87,6 +99,9 @@ def score(expected: Dict[str, Set[str]], predicted: Dict[str, Set[str]]) -> Dict
     f1 = 2 * precision * recall / (precision + recall) if (precision + recall) else 0.0
     fpr = total_fp / (total_fp + total_tp) if (total_fp + total_tp) else 0.0
     neg_acc = total_clean_correct / total_clean_files if total_clean_files else 0.0
+    file_accuracy = total_files_exact / len(expected) if expected else 0.0
+    denom = total_tp + total_fp + total_fn + total_tn
+    rule_accuracy = (total_tp + total_tn) / denom if denom else 0.0
 
     # Per-rule breakdown
     per_rule = defaultdict(lambda: {"tp": 0, "fp": 0, "fn": 0})
@@ -118,9 +133,12 @@ def score(expected: Dict[str, Set[str]], predicted: Dict[str, Set[str]]) -> Dict
             "true_positives": total_tp,
             "false_positives": total_fp,
             "false_negatives": total_fn,
+            "true_negatives": total_tn,
             "precision": round(precision, 4),
             "recall": round(recall, 4),
             "f1_score": round(f1, 4),
+            "accuracy": round(rule_accuracy, 4),
+            "file_exact_match_accuracy": round(file_accuracy, 4),
             "false_positive_rate": round(fpr, 4),
             "clean_file_accuracy": round(neg_acc, 4),
         },
@@ -138,11 +156,14 @@ def print_report(report: Dict) -> None:
     print(f"  True Positives (TP):  {agg['true_positives']}")
     print(f"  False Positives (FP): {agg['false_positives']}")
     print(f"  False Negatives (FN): {agg['false_negatives']}")
+    print(f"  True Negatives (TN):  {agg['true_negatives']}")
     print(f"  {'Metric':<28}{'Value':>10}{'Target':>16}")
     print(f"  {'-'*54}")
     print(f"  {'Precision':<28}{agg['precision']:>10.4f}{'> 0.85':>16}")
     print(f"  {'Recall':<28}{agg['recall']:>10.4f}{'> 0.70':>16}")
     print(f"  {'F1 Score':<28}{agg['f1_score']:>10.4f}{'':>16}")
+    print(f"  {'Accuracy (rule-level)':<28}{agg['accuracy']:>10.4f}{'':>16}")
+    print(f"  {'File Exact-Match Acc.':<28}{agg['file_exact_match_accuracy']:>10.4f}{'':>16}")
     print(f"  {'False Positive Rate':<28}{agg['false_positive_rate']:>10.4f}{'< 0.15':>16}")
     print(f"  {'Clean-File Accuracy':<28}{agg['clean_file_accuracy']:>10.4f}{'1.0000':>16}")
 

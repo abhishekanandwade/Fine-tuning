@@ -4,9 +4,12 @@
     "true_positives": 9,
     "false_positives": 1,
     "false_negatives": 8,
+    "true_negatives": 288,
     "precision": 0.9,
     "recall": 0.5294,
     "f1_score": 0.6667,
+    "accuracy": 0.9706,
+    "file_exact_match_accuracy": 0.5,
     "false_positive_rate": 0.1,
     "clean_file_accuracy": 1.0
   },

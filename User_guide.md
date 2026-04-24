@@ -20,11 +20,7 @@ python pipeline/review_pipeline.py --help
 
 # Evaluation
 # 1. makes the model review code and produce findings using simple RAG;
-cd "c:\Users\knchaitr\OneDrive - Hewlett Packard Enterprise\CoE Team\Fine-tuning-main\code-review"
 
-Remove-Item -Force "./rag/qdrant_db/.lock" -ErrorAction SilentlyContinue
-
-& "C:/Users/knchaitr/OneDrive - Hewlett Packard Enterprise/CoE Team/Fine-tuning-main/.venv/Scripts/python.exe" 
 python pipeline/review_pipeline.py `
     --repo ./benchmarks/seeded_repo `
     --output ./results/seeded_review_simple.json `
@@ -32,6 +28,8 @@ python pipeline/review_pipeline.py `
     --ollama-model qwen2.5-coder:7b
 
 # 2. makes the model review code and produce findings using Agentic RAG;
+
+cd code-review
 
 python pipeline/review_pipeline.py `
     --repo ./benchmarks/seeded_repo `
@@ -41,9 +39,23 @@ python pipeline/review_pipeline.py `
     --ollama-model qwen2.5-coder:7b
 
 # 3. compares those findings to known-correct answers and prints an accuracy grade.
-& "C:/Users/knchaitr/OneDrive - Hewlett Packard Enterprise/CoE Team/Fine-tuning-main/.venv/Scripts/python.exe" training/evaluate_seeded.py `
-    --review ./results/seeded_review.json `
-    --ground-truth ./benchmarks/ground_truth.json `
+
+# cd code-review; 
+
+python training/evaluate_seeded.py 
+    --review ./results/seeded_review.json 
+    --ground-truth ./benchmarks/ground_truth.json 
     --report ./results/seeded_eval_report.json
 
-#
+# from code-review/
+python pipeline/review_pipeline.py --repo ./benchmarks/seeded_repo `
+    --output ./results/seeded_review_simple.json `
+    --mode rag-only --ollama-model qwen2.5-coder:7b
+
+python pipeline/review_pipeline.py --repo ./benchmarks/seeded_repo `
+    --output ./results/seeded_review_agentic.json `
+    --mode rag-only --rag-mode agentic --ollama-model qwen2.5-coder:7b
+
+# Then grade both against ground truth
+python training/evaluate_seeded.py --review ./results/seeded_review_simple.json  --ground-truth ./benchmarks/ground_truth.json --report ./results/eval_simple.json
+python training/evaluate_seeded.py --review ./results/seeded_review_agentic.json --ground-truth ./benchmarks/ground_truth.json --report ./results/eval_agentic.json
