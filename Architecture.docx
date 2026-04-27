@@ -55,7 +55,7 @@ RAG Pipeline
 │  ④ LLM returns JSON findings                                 │
 └─────────────────────────────────────────────────────────────┘
 
-Agentic RAG
+Agentic RAG Pipeline
 
 START → planner (LLM picks agents)
       → fan-out (parallel via add_conditional_edges)
