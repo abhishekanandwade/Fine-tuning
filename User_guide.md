@@ -58,4 +58,5 @@ python pipeline/review_pipeline.py --repo ./benchmarks/seeded_repo `
 
 # Then grade both against ground truth
 python training/evaluate_seeded.py --review ./results/seeded_review_simple.json  --ground-truth ./benchmarks/ground_truth.json --report ./results/eval_simple.json
+
 python training/evaluate_seeded.py --review ./results/seeded_review_agentic.json --ground-truth ./benchmarks/ground_truth.json --report ./results/eval_agentic.json
