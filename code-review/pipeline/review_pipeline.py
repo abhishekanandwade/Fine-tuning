@@ -176,7 +176,7 @@ class GoReviewPipeline:
         # Always need an LLM for inference, even in rag-only mode
         if self.config.ollama_model:
             self._load_ollama()
-        elif self.config.mode in ("hybrid", "fine-tune-only"):
+        else:
             self._load_local_model()
 
         self._loaded = True
