@@ -1,0 +1,1052 @@
+{
+	"info": {
+		"_postman_id": "6a058145-51f5-417f-a9e5-8849f94734cb",
+		"name": "PMDM Opt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29586061"
+	},
+	"item": [
+		{
+			"name": "ListCadres",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/cadres",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"cadres"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPostNameMasterBycadreID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/cadres/139",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"cadres",
+						"139"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PostManagementGroupByCadreCountByOfficeID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/cadres/cadre-groups/90010122",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"cadres",
+						"cadre-groups",
+						"90010122"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreatePostManagementMaster",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v2/PMDM/post-management1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v2",
+						"PMDM",
+						"post-management1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PostManagementByOfficeAndPost",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/posts?office-id=21260701",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"posts"
+					],
+					"query": [
+						{
+							"key": "office-id",
+							"value": "21260701"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPostManagementMasterWithMaker",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/posts?office-id=70001281",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"posts"
+					],
+					"query": [
+						{
+							"key": "office-id",
+							"value": "70001281"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FetchSurplusPostRecordByApproverPostID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/posts/surplus?approved-by=30007706",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"posts",
+						"surplus"
+					],
+					"query": [
+						{
+							"key": "approved-by",
+							"value": "30007706"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdatePostManagementMaster",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"office_id\": 123,\r\n  \"field_name\": [\"post_name\", \"designation\"],\r\n  \"field_value\": [\"Postmaster\", \"Senior\"]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/posts/61",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"posts",
+						"61"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ApprovePostManagementMaster",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"office_id\": 123,\r\n  \"field_name\": [\"post_name\", \"designation\"],\r\n  \"field_value\": [\"Postmaster\", \"Senior\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/posts/61/approve",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"posts",
+						"61",
+						"approve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PostManagementChangFilledStatusByPostID",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"office_id\": 123,\r\n  \"field_name\": [\"post_name\", \"designation\"],\r\n  \"field_value\": [\"Postmaster\", \"Senior\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/posts/61/status-change",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"posts",
+						"61",
+						"status-change"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeletePostManagementMaster",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/posts/46",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"posts",
+						"46"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RestoredSurplusPost",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"post-ids\": [101, 102, 103],\r\n  \"updated-by\": \"Jane Doe\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/posts/bulk-surplus-restore",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"posts",
+						"bulk-surplus-restore"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "byOfficePosts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/offices/21260701/posts?filled-status=vacant?group-id=4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"offices",
+						"21260701",
+						"posts"
+					],
+					"query": [
+						{
+							"key": "filled-status",
+							"value": "vacant?group-id=4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "byOfficePostsSummary",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/offices/21260701/posts-summary?vacant=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"offices",
+						"21260701",
+						"posts-summary"
+					],
+					"query": [
+						{
+							"key": "vacant",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreatePostManagementMaker",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"postcreatereq\": [\r\n    {\r\n      \"post_id\": 101,\r\n      \"post_name\": \"Assistant Manager\",\r\n      \"office_id\": 123,\r\n      \"office_name\": \"Head Office\",\r\n      \"new_office_id\": 456,\r\n      \"new_office_name\": \"Branch Office\",\r\n      \"cadre_id\": 1,\r\n      \"group_id\": 2,\r\n      \"designation\": \"Manager\",\r\n      \"grade_pay\": 5400,\r\n      \"status\": \"active\",\r\n      \"order_casemark\": \"Case001\",\r\n      \"order_date\": \"2024-09-01T00:00:00Z\",\r\n      \"upload_order_doc_name\": \"order_doc.pdf\",\r\n      \"remarks\": \"Promotion\",\r\n      \"approve_post_id\": \"AP001\",\r\n      \"pay_level\": 7,\r\n      \"cadre_name\": \"Administrative\",\r\n      \"designation_id\": 101,\r\n      \"employee_group\": \"Group A\",\r\n      \"exchange_post_id\": 202\r\n    },\r\n    {\r\n      \"post_id\": 102,\r\n      \"post_name\": \"Senior Officer\",\r\n      \"office_id\": 124,\r\n      \"office_name\": \"Regional Office\",\r\n      \"new_office_id\": 457,\r\n      \"new_office_name\": \"Branch Office 2\",\r\n      \"cadre_id\": 3,\r\n      \"group_id\": 4,\r\n      \"designation\": \"Officer\",\r\n      \"grade_pay\": 4600,\r\n      \"status\": \"active\",\r\n      \"order_casemark\": \"Case002\",\r\n      \"order_date\": \"2024-09-10T00:00:00Z\",\r\n      \"upload_order_doc_name\": \"order_doc2.pdf\",\r\n      \"remarks\": \"Transfer\",\r\n      \"approve_post_id\": \"AP002\",\r\n      \"pay_level\": 6,\r\n      \"cadre_name\": \"Technical\",\r\n      \"designation_id\": 102,\r\n      \"employee_group\": \"Group B\",\r\n      \"exchange_post_id\": 203\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/makers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"makers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "makers-status-pending",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/makers/makers-status-pending?post-id=30007706",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"makers",
+						"makers-status-pending"
+					],
+					"query": [
+						{
+							"key": "post-id",
+							"value": "30007706"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FetchPostsByOfficeIDAndMaker",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/makers?office-id=21260551",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"makers"
+					],
+					"query": [
+						{
+							"key": "office-id",
+							"value": "21260551"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ApprovePostManagementMaker",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"post-ids\": [101, 102, 103],\r\n  \"approved-by\": \"John Doe\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/makers/bulk-approve",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"makers",
+						"bulk-approve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ApprovePostManagementMakerForAbolishPost",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/makers/bulk-abolish",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"makers",
+						"bulk-abolish"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ApprovePostManagementMakerForExchangePost",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"post-ids\": [101, 102, 103],\r\n  \"approved-by\": \"John Doe\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/makers/bulk-exchange-post",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"makers",
+						"bulk-exchange-post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RejectPostManagementMaker",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"post-ids\": [101, 102, 103],\r\n  \"approved-by\": \"John Doe\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/makers/bulk-reject",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"makers",
+						"bulk-reject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FetchEstablishmentRegister",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/establishment-register?register-id=101?office-id=21260701?office-type=",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"establishment-register"
+					],
+					"query": [
+						{
+							"key": "register-id",
+							"value": "101?office-id=21260701?office-type="
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EstblishnentRegisterByOffice",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/establishment-register/establishments?office-id=123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"establishment-register",
+						"establishments"
+					],
+					"query": [
+						{
+							"key": "office-id",
+							"value": "123"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ListAndFilterDesignations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/designations?group-code=1&cadre-code=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"designations"
+					],
+					"query": [
+						{
+							"key": "group-code",
+							"value": "1"
+						},
+						{
+							"key": "cadre-code",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreatePostMappingDetail",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"employee_post_id\": 101,\r\n  \"employee_office_id\": 202\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/ptop-mappings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"ptop-mappings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPostMappingMaster",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/ptop-mappings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"ptop-mappings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAuthorityDetailsByPostID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/ptop-mappings/authority-details?post-id=30500001",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"ptop-mappings",
+						"authority-details"
+					],
+					"query": [
+						{
+							"key": "post-id",
+							"value": "30500001"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetMasterAuthoritiesDeatils",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/ptop-mappings/master-authority-details?post-id=61",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"ptop-mappings",
+						"master-authority-details"
+					],
+					"query": [
+						{
+							"key": "post-id",
+							"value": "61"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdatePostMappingDetail",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"field_name\": [\"post_name\", \"designation\"],\r\n  \"field_value\": [\"Postmaster\", \"Senior\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/ptop-mappings/61",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"ptop-mappings",
+						"61"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateArrayOfEmpPostIDForParticularField",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"office-id\": 12345,\r\n  \"employee_post_id\": [101, 102, 103],\r\n  \"field_name\": \"post_name\",\r\n  \"field_value\": \"Postal Assistant\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/ptop-mappings/bulk-posts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"ptop-mappings",
+						"bulk-posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateArrayOfEmpPostIDForManyField",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"office-id\": [201, 202],\r\n  \"employee-post-id\": [1101, 1102, 1103],\r\n  \"field-name\": [\"designation\", \"salary\", \"department\"],\r\n  \"field-value\": [\"Senior Manager\", 85000, \"Finance\"]\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/ptop-mappings/bulk-mapping",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"ptop-mappings",
+						"bulk-mapping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreatePostMappingDetailMaker",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"office-id\": 12345,\r\n  \"employee_post_id\": [2001, 2002, 2003],\r\n  \"field_name\": [\"designation\", \"salary\", \"department\"],\r\n  \"field_value\": [\"Team Lead\", 95000, \"IT\"]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/ptop-mappings-makers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"ptop-mappings-makers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPostMappingMasterMaker",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/ptop-mappings-makers?post-id=61",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"ptop-mappings-makers"
+					],
+					"query": [
+						{
+							"key": "post-id",
+							"value": "61"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ApprovePostMappingDetailMaker",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"post-id\": 3001,\r\n  \"approved_by\": \"John Doe\",\r\n  \"field_name\": \"salary\",\r\n  \"field_value\": 75000,\r\n  \"approve_status\": \"approved\",\r\n  \"authority_office_id\": 123,\r\n  \"remarks\": \"Approved after review\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/ptop-mappings-makers/bulk-approve",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"ptop-mappings-makers",
+						"bulk-approve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UploadFile",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/files?office-id=9001012",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"files"
+					],
+					"query": [
+						{
+							"key": "office-id",
+							"value": "9001012"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/post-management/files?office_id=9001012",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"post-management",
+						"files"
+					],
+					"query": [
+						{
+							"key": "office_id",
+							"value": "9001012"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.test(\"Response has the required fields - success, message, data\", function () {\r",
+					"    const responseData = pm.response.json();\r",
+					"    \r",
+					"    pm.response.to.have.status(200);\r",
+					"    pm.expect(responseData).to.be.an('object');\r",
+					"    pm.expect(responseData).to.have.property('success');\r",
+					"    pm.expect(responseData).to.have.property('message');\r",
+					"    pm.expect(responseData).to.have.property('data');\r",
+					"});"
+				]
+			}
+		}
+	]
+}

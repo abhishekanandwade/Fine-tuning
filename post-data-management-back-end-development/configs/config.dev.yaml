@@ -1,0 +1,77 @@
+appname: "go-postdatamanagement" # change appname accordingly. This is necessary for tracing. else will not work.
+trace:
+  enabled: true #trace enable/disable
+  processor: 
+    type: "otlp-grpc"
+    options:
+      host: "localhost:4317"
+  sampler:
+    type: always-on
+    # type: parent-based-trace-id-ratio
+    options: 
+      ratio: 0.1
+db:
+  username: "pmdm_rw_user" # change to your database username
+  password: "DoPrw@123" # change to your database password
+  host: "10.20.30.48" # change to your database host
+  port: "5432" # change to your database port
+  database: "pmdmdb" # change to your database name
+  schema: "pmdm" # change to your database schema
+  maxconns: 10
+  minconns: 1
+  maxconnlifetime: 100
+  maxconnidletime: 10
+  healthcheckperiod: 5
+  QueryTimeoutLow: 2s
+  QueryTimeoutMed: 5s
+info:  ## This is the information that will be displayed in the swagger
+  name: "PMDM"
+  version: "1.0.0"
+  description: "test service"
+  title: "PMDM"
+  terms: "https://example.com/terms"
+  email: "test@gmail.com" ## This is the email address to contact the API maintainer and this reflects in swagger
+server:
+  servicename: "bepostmanagement"
+  bodylimit: 1048500
+  readbuffersize: 1638400
+  addr: ":8080"
+  readtimeout: 10s
+  writetimeout: 10s
+  timeout: 40 ## Over all timeout for the request
+  cors:       
+    alloworigins:
+      - "http://localhost:3000"
+      - "http://localhost:8080"        
+    allowheaders:
+      - "Authorization"
+      - "Content-Type"
+      - "X-Request-Id"
+    allowmethods:
+      - "GET"
+      - "POST"
+      - "PUT"
+      - "DELETE"
+      - "OPTIONS"
+  healthcheck: 
+    endpoints:
+      liveness:
+      readiness:
+log:
+  level: ""
+  format: "json"
+  output: "stdout"
+client: 
+  baseurl: "http://localhost:8080"
+url:
+  masterdatabaseurl: "https://dev.cept.gov.in/bemasterdata/v1/"
+
+  HttpUrl: 127.0.0.1
+  HttpPort: 8080
+  HttpAllowedOrigins: "*"
+  loglevel: info
+minio:
+  url: s3.cept.gov.in
+  accessKey: L2mAHzZRDF4qapc4LOld
+  bucketName: pdmanagement
+  secretKey: ym1J5xGylJVwDprRa405xBtGTWMS2QZXzdrFwQX0

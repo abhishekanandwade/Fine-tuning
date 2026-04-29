@@ -1,0 +1,51 @@
+-- pmdm.postmanagement_master definition
+
+-- Drop table
+
+-- DROP TABLE pmdm.postmanagement_master;
+
+CREATE TABLE pmdm.postmanagement_master (
+	postmanagement_id serial4 NOT NULL,
+	office_id int4 NOT NULL,
+	post_name varchar(50) NULL,
+	office_name varchar(50) NULL,
+	group_id int4 NULL,
+	cadre_name varchar(50) NULL,
+	filled_status varchar(30) NULL,
+	post_status varchar(30) NULL,
+	allowances_attached bool DEFAULT false NULL,
+	allowance_description varchar(100) NULL,
+	created_by varchar(50) NULL,
+	created_date timestamp NULL,
+	approved_by varchar(30) NULL,
+	approved_date timestamp NULL,
+	updated_by varchar(30) NULL,
+	updated_date timestamp NULL,
+	status varchar(30) NULL,
+	remarks varchar(200) NULL,
+	valid_from timestamp NULL,
+	valid_to timestamp NULL,
+	order_casemark varchar(100) NULL,
+	order_date timestamp NULL,
+	upload_order_doc_name varchar(50) NULL,
+	establishment_register_id int4 NULL,
+	designation varchar(50) NULL,
+	pay_level int4 NULL,
+	grade_pay int4 NULL,
+	permanent_status bool DEFAULT true NULL,
+	establishment_register_name varchar(200) NULL,
+	post_id int4 DEFAULT nextval('pmdm.postmanagement_master_post_id1_seq'::regclass) NOT NULL,
+	employee_group varchar(30) NULL,
+	sanctioned_strength int4 NULL,
+	group_name varchar(50) NULL,
+	cadre_id int4 NULL,
+	designation_id int4 NULL,
+	approve_post_id varchar(30) NULL,
+	master_maker_id varchar(200) NULL,
+	admin_office_id int4 NULL,
+	employee_type varchar(30) NULL,
+	office_type varchar(10) NULL,
+	login_id int4 NULL,
+	CONSTRAINT postmanagement_master_pk PRIMARY KEY (postmanagement_id),
+	CONSTRAINT postmanagement_master_un UNIQUE (post_id)
+);

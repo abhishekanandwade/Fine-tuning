@@ -1,0 +1,63 @@
+package middlewares
+
+import (
+	"regexp"
+
+	"github.com/gin-gonic/gin"
+	auth "gitlab.cept.gov.in/it-2.0-common/api-authz"
+	apiError "gitlab.cept.gov.in/it-2.0-common/api-errors"
+	l "gitlab.cept.gov.in/it-2.0-common/api-log"
+)
+
+var ignoredPaths = []string{
+	".*/healthz$",
+	".*/swagger/.*$",
+}
+
+func AuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// Check if the current request path matches any of the ignored paths
+		for _, pathPattern := range ignoredPaths {
+			matched, err := regexp.MatchString(pathPattern, c.Request.URL.Path)
+			if err != nil {
+				l.Error(c, "Error matching ignored path pattern: %v", err)
+				apiError.HandleValidationError(c, err)
+				c.Abort()
+				return
+			}
+			if matched {
+				l.Info(c, "Path %s is ignored for authorization", c.Request.URL.Path)
+				c.Next() // Skip authorization and proceed to the next middleware or handler
+				return
+			}
+		}
+
+		// Proceed with authorization if the path is not ignored
+		authResult, authErr := auth.Authorize(c)
+		if authErr != nil {
+			l.Error(c, "Authorization error: %v", authErr)
+
+			// Check if authErr is of type AppError to access the Code field
+			if appErr, ok := authErr.(*apiError.AppError); ok {
+				if appErr.Code == "401" {
+					apiError.HandleUnauthorizedError(c)
+				} else if appErr.Code == "500" {
+					apiError.HandleError(c, appErr)
+				}
+			} else {
+				apiError.HandleError(c, authErr) // Handle non-AppError errors generically
+			}
+
+			c.Abort()
+			return
+		}
+		if !authResult.Authorization {
+			l.Info(c, "Access denied: User %s is not authorized", c.GetHeader("X-User-ID"))
+			apiError.HandleForbiddenError(c)
+			c.Abort()
+			return
+		}
+
+		c.Next() // Proceed to the next middleware or request handler
+	}
+}

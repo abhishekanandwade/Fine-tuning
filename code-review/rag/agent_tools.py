@@ -208,6 +208,44 @@ def tool_explain_query(query_snippet: str) -> str:
     return "analysis: " + ("; ".join(flags) if flags else "no obvious issues")
 
 
+def tool_analyze_architecture(repo_path: str) -> str:
+    """
+    Run the deterministic architectural analyzer (REPO-001, REPO-002,
+    HANDLER-001) against the repository and return a compact text summary
+    suitable for inclusion in an agent prompt.
+    """
+    try:
+        import sys
+        import os
+        _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if _root not in sys.path:
+            sys.path.insert(0, _root)
+        from pipeline.architectural_analyzer import ArchitecturalAnalyzer
+        analyzer = ArchitecturalAnalyzer(repo_path=repo_path)
+        report = analyzer.analyze()
+        if not report.findings:
+            return "[architectural-analysis] No REPO-001 / REPO-002 / HANDLER-001 violations found."
+        lines = [
+            f"[architectural-analysis] {report.total_findings} findings "
+            f"(CRITICAL:{report.summary.get('CRITICAL',0)} "
+            f"HIGH:{report.summary.get('HIGH',0)})",
+            "",
+        ]
+        for f in report.findings:
+            lines.append(
+                f"  [{f['rule_id']}] {f['severity']} — {f['title']}"
+            )
+            lines.append(f"    File: {f['file']} | Function: {f['function']} "
+                         f"(lines {f['line_start']}–{f['line_end']})")
+            lines.append(f"    Issue: {f['issue']}")
+            for ol in f.get('offending_lines', [])[:3]:
+                lines.append(f"      > {ol}")
+            lines.append("")
+        return "\n".join(lines)
+    except Exception as e:
+        return f"[tool-error] architectural analysis failed: {e}"
+
+
 def tool_query_rag(retriever, query: str, category: Optional[str] = None, top_k: int = 4) -> str:
     """Call the underlying vector-store retriever and return formatted rules."""
     if retriever is None:
@@ -238,4 +276,5 @@ def build_toolbox(repo_path: str, rag_retriever) -> Dict[str, callable]:
         "QuerySchema":           lambda: tool_query_schema(repo_path),
         "ExplainQuery":          lambda q: tool_explain_query(q),
         "QueryRAG":              lambda q, category=None, top_k=4: tool_query_rag(rag_retriever, q, category, top_k),
+        "AnalyzeArchitecture":   lambda: tool_analyze_architecture(repo_path),
     }

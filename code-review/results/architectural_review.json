@@ -1,0 +1,17 @@
+{
+  "repo_path": "D:\\AI-ML\\Fine-tuning\\code-review\\benchmarks\\seeded_repo",
+  "total_files_scanned": 18,
+  "repo_files": 0,
+  "handler_files": 0,
+  "total_findings": 0,
+  "findings_by_rule": {},
+  "findings": [],
+  "summary": {
+    "CRITICAL": 0,
+    "HIGH": 0,
+    "MEDIUM": 0,
+    "LOW": 0,
+    "total": 0,
+    "rules_violated": []
+  }
+}

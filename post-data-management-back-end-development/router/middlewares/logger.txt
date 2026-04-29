@@ -1,0 +1,75 @@
+package middlewares
+
+import (
+	"fmt"
+	"net/http"
+	"os"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	apierrors "gitlab.cept.gov.in/it-2.0-common/api-errors"
+	log "gitlab.cept.gov.in/it-2.0-common/api-log"
+)
+
+func Logger() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start := time.Now()
+		c.Next()
+		latency := time.Since(start)
+		status := c.Writer.Status()
+		errorv := c.Errors.ByType(gin.ErrorTypePrivate).String()
+
+		requestID := c.GetHeader("X-Request-ID")
+
+		pid := os.Getpid()
+
+		log.GetBaseLoggerInstance().ToZerolog().
+			//log.ToZerolog().
+			Info().
+			Str("IP", c.ClientIP()).
+			Int("Pid", pid).
+			Int("Status", status).
+			Str("Method", c.Request.Method).
+			Str("Path", c.Request.RequestURI).
+			Dur("Latency", latency).
+			Str("RequestID", requestID).
+			Int64("BytesReceived", c.Request.ContentLength).
+			Int("BytesSent", c.Writer.Size()).
+			Str("Error", errorv).
+			Msg("request")
+	}
+}
+
+func Recover() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		defer func() {
+			if r := recover(); r != nil {
+				var err apierrors.AppError
+				if e, ok := r.(error); ok {
+
+					err = apierrors.NewAppError("500", "500", e)
+				} else {
+					//err = fmt.Errorf("%v", r)
+					err = apierrors.NewAppError("500", "500", fmt.Errorf("%v", r))
+				}
+				log.GetBaseLoggerInstance().ToZerolog().Error().Msgf("Panic: %v\n %v", err, err.Stack)
+				c.AbortWithStatus(http.StatusInternalServerError)
+
+				//c.AbortWithStatus(http.StatusInternalServerError)
+			}
+		}()
+		c.Next()
+	}
+}
+
+func SetCtxLoggerMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		log.SetCtxLoggerMiddleware(c)
+	}
+}
+
+func RequestResponseLoggerMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		log.RequestResponseLoggerMiddleware(c)
+	}
+}

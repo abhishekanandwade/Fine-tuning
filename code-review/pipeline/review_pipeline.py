@@ -666,6 +666,54 @@ Report EVERY violation you find using the format in the system prompt.
 
         return report
 
+    # ── Architectural Review ─────────────────────────────────────────────────
+
+    def review_architecture(self, repo_path: str, output_path: Optional[str] = None) -> Dict:
+        """
+        Run the deterministic architectural analyzer over the repository,
+        enforcing REPO-001, REPO-002, and HANDLER-001.
+
+        This path is fully LLM-free — results are based on static AST/regex
+        analysis of the Go source, so it is fast and deterministic.
+
+        Args:
+            repo_path:   Path to the Go repository root.
+            output_path: If provided, write the JSON report to this file.
+
+        Returns:
+            The ArchitecturalReport as a plain dict.
+        """
+        from pipeline.architectural_analyzer import ArchitecturalAnalyzer
+
+        print(f"\n{'='*60}")
+        print(f"  Architectural Review: {repo_path}")
+        print(f"  Rules: REPO-001, REPO-002, HANDLER-001")
+        print(f"{'='*60}\n")
+
+        analyzer = ArchitecturalAnalyzer(repo_path=repo_path)
+        report = analyzer.analyze()
+
+        print(f"[INFO] Scanned {report.total_files_scanned} .go files  "
+              f"(repo={report.repo_files}, handler={report.handler_files})")
+        print(f"[INFO] Architectural findings: {report.total_findings}  "
+              f"(CRITICAL: {report.summary.get('CRITICAL', 0)}, "
+              f"HIGH: {report.summary.get('HIGH', 0)})")
+        if report.findings_by_rule:
+            for rule_id, count in report.findings_by_rule.items():
+                print(f"         {rule_id}: {count}")
+
+        report_dict = report.to_dict()
+
+        if output_path:
+            out_dir = os.path.dirname(os.path.abspath(output_path))
+            os.makedirs(out_dir, exist_ok=True)
+            with open(output_path, "w", encoding="utf-8") as f:
+                json.dump(report_dict, f, indent=2, default=str)
+            print(f"[INFO] Architectural report saved to {output_path}")
+
+        print(f"{'='*60}\n")
+        return report_dict
+
     def review_file(self, file_path: str) -> List[Dict]:
         """Review a single Go file and return findings."""
         self.load()
@@ -732,6 +780,26 @@ def main():
     parser.add_argument("--format", choices=["json", "markdown", "sarif"], default="json")
     parser.add_argument("--no-quant", action="store_true", help="Disable quantization")
     parser.add_argument(
+        "--arch-review",
+        action="store_true",
+        default=False,
+        help=(
+            "Run the deterministic architectural review (REPO-001, REPO-002, HANDLER-001). "
+            "Can be combined with the normal LLM review or used standalone with --arch-only."
+        ),
+    )
+    parser.add_argument(
+        "--arch-only",
+        action="store_true",
+        default=False,
+        help="Run ONLY the architectural review without loading the LLM. Implies --arch-review.",
+    )
+    parser.add_argument(
+        "--arch-output",
+        default=None,
+        help="Write the architectural findings JSON to this path (default: <output>_arch.json or stdout).",
+    )
+    parser.add_argument(
         "--debug",
         nargs="?",
         const=True,
@@ -741,6 +809,45 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # --arch-only implies --arch-review (no LLM needed)
+    if args.arch_only:
+        args.arch_review = True
+
+    # ── Architectural-only path (no LLM load) ────────────────────────────────
+    if args.arch_only:
+        from pipeline.architectural_analyzer import ArchitecturalAnalyzer
+
+        arch_output = args.arch_output
+        if arch_output is None:
+            cleaned_base = args.output.lstrip('/').lstrip('\\') if args.output else None
+            arch_output = (
+                os.path.join(invocation_dir, cleaned_base)
+                if cleaned_base
+                else None
+            )
+
+        analyzer = ArchitecturalAnalyzer(repo_path=args.repo)
+        report = analyzer.analyze()
+        output_json = report.to_json()
+
+        print(f"[INFO] Scanned {report.total_files_scanned} files | "
+              f"Findings: {report.total_findings} "
+              f"(CRITICAL: {report.summary.get('CRITICAL', 0)}, "
+              f"HIGH: {report.summary.get('HIGH', 0)})")
+
+        if arch_output:
+            cleaned = arch_output.lstrip('/').lstrip('\\')
+            out_path = os.path.join(invocation_dir, cleaned)
+            os.makedirs(os.path.dirname(os.path.abspath(out_path)), exist_ok=True)
+            with open(out_path, "w", encoding="utf-8") as f:
+                f.write(output_json)
+            print(f"[INFO] Architectural report saved to {out_path}")
+        else:
+            print(output_json)
+        return
+
+    # ── Build pipeline config ─────────────────────────────────────────────────
 
     config = ReviewConfig(
         model_path=args.model,
@@ -755,6 +862,22 @@ def main():
 
     with GoReviewPipeline(config=config) as pipeline:
         report = pipeline.review_repository(args.repo)
+
+        # ── Optional architectural review pass ────────────────────────────────
+        arch_report_dict = None
+        if args.arch_review:
+            # Resolve arch output path
+            arch_output = args.arch_output
+            if arch_output is None and args.output:
+                base, ext = os.path.splitext(args.output.lstrip('/').lstrip('\\'))
+                arch_output = os.path.join(invocation_dir, base + "_arch" + (ext or ".json"))
+            elif arch_output is None:
+                arch_output = None  # will print to stdout after main report
+
+            arch_report_dict = pipeline.review_architecture(
+                repo_path=args.repo,
+                output_path=arch_output,
+            )
 
     # Generate output
     if args.format == "json":
@@ -788,6 +911,17 @@ def main():
             print(output_data)
         else:
             print(json.dumps(output_data, indent=2, default=str))
+
+    # If an arch review was run but no arch output file was specified and no
+    # --output was given either, print the arch report to stdout now.
+    if (
+        'arch_report_dict' in dir()
+        and arch_report_dict is not None
+        and args.arch_output is None
+        and args.output is None
+    ):
+        print("\n\n# ─── Architectural Review Findings ───")
+        print(json.dumps(arch_report_dict, indent=2, default=str))
 
 
 if __name__ == "__main__":

@@ -165,6 +165,39 @@
     "auto_fixable": false
   },
   {
+    "rule_id": "REPO-001",
+    "category": "architecture",
+    "severity": "high",
+    "title": "Repository function must contain exactly one database call",
+    "description": "Each repository function must perform exactly one database operation. Multiple DB calls in a single repository function blur responsibilities, make transactions ambiguous, and hide N+1 patterns. Split the function or wrap the calls in a single transaction helper.",
+    "violation_example": "func (r *UserRepo) CreateWithProfile(ctx context.Context, u User) error {\n    _, err := r.db.ExecContext(ctx, insertUserSQL, u.ID, u.Email)  // call 1\n    if err != nil { return err }\n    _, err = r.db.ExecContext(ctx, insertProfileSQL, u.ID, u.Name) // call 2 — BAD\n    return err\n}",
+    "correct_example": "// Split into two focused functions or use a transaction wrapper.\nfunc (r *UserRepo) Create(ctx context.Context, u User) error {\n    _, err := r.db.ExecContext(ctx, insertUserSQL, u.ID, u.Email)\n    return err\n}\nfunc (r *UserRepo) CreateProfile(ctx context.Context, p Profile) error {\n    _, err := r.db.ExecContext(ctx, insertProfileSQL, p.UserID, p.Name)\n    return err\n}",
+    "reference": "https://martinfowler.com/eaaCatalog/repository.html",
+    "auto_fixable": false
+  },
+  {
+    "rule_id": "REPO-002",
+    "category": "performance",
+    "severity": "critical",
+    "title": "Database call must not appear inside a for/range loop (N+1 anti-pattern)",
+    "description": "Issuing a database call inside a loop produces N round-trips for N iterations (the N+1 query problem). This causes exponential latency growth and connection-pool exhaustion under load. Batch the identifiers and issue a single bulk query instead.",
+    "violation_example": "func (r *OrderRepo) EnrichItems(ctx context.Context, orders []Order) error {\n    for _, o := range orders {\n        row := r.db.QueryRowContext(ctx, getItemSQL, o.ID) // BAD: N queries\n        row.Scan(&o.Item)\n    }\n    return nil\n}",
+    "correct_example": "func (r *OrderRepo) EnrichItems(ctx context.Context, orders []Order) error {\n    ids := make([]int64, len(orders))\n    for i, o := range orders { ids[i] = o.ID }\n    rows, err := r.db.QueryContext(ctx, getItemsSQL, pq.Array(ids)) // GOOD: single query\n    // ... scan rows into a map, then assign back\n    return err\n}",
+    "reference": "https://use-the-index-luke.com/sql/join/nested-loops-join-n1-problem",
+    "auto_fixable": false
+  },
+  {
+    "rule_id": "HANDLER-001",
+    "category": "architecture",
+    "severity": "high",
+    "title": "Handler must not call more than one repository method directly",
+    "description": "HTTP handlers should be thin adapters. Orchestrating multiple repository calls directly in a handler embeds business logic in the transport layer, prevents reuse, complicates testing, and leaks domain concerns. Introduce a service/use-case layer to own the multi-repo orchestration.",
+    "violation_example": "func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {\n    user, _ := h.userRepo.Create(ctx, u)      // repo call 1 — BAD\n    profile, _ := h.profileRepo.Create(ctx, p) // repo call 2 — BAD\n    json.NewEncoder(w).Encode(user)\n}",
+    "correct_example": "func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {\n    result, err := h.userService.CreateWithProfile(ctx, req) // single service call\n    if err != nil { http.Error(w, err.Error(), 500); return }\n    json.NewEncoder(w).Encode(result)\n}",
+    "reference": "https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html",
+    "auto_fixable": false
+  },
+  {
     "rule_id": "PERF-001",
     "category": "performance",
     "severity": "medium",

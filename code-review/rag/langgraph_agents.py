@@ -62,10 +62,14 @@ AGENT_REGISTRY: Dict[str, Dict] = {
     },
     "database": {
         "persona": "DB Reliability Engineer",
-        "focus": "transaction safety, pgx batch patterns, partition keys, migrations, indexes",
-        "tools": ["QuerySchema", "ExplainQuery", "ReadFile", "ParseAST", "QueryRAG"],
+        "focus": (
+            "transaction safety, pgx batch patterns, partition keys, migrations, indexes; "
+            "repository-layer architectural rules: single DB call per repo function (REPO-001), "
+            "no DB calls inside loops (REPO-002), handlers must not call multiple repos (HANDLER-001)"
+        ),
+        "tools": ["QuerySchema", "ExplainQuery", "ReadFile", "ParseAST", "QueryRAG", "AnalyzeArchitecture"],
         "rag_category": "security",  # SQL rules live under security in rules.json
-        "rule_ids": ["SEC-002"],
+        "rule_ids": ["SEC-002", "REPO-001", "REPO-002", "HANDLER-001"],
     },
     "concurrency": {
         "persona": "Systems Engineer",

@@ -1,0 +1,21 @@
+package middlewares
+
+import (
+	"github.com/gin-gonic/gin"
+	config "gitlab.cept.gov.in/it-2.0-common/api-config"
+)
+
+func CORSMiddleware(cfg *config.Config) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", cfg.GetString("alloworigins"))
+		c.Writer.Header().Set("Access-Control-Allow-Methods", cfg.GetString("allowmethods"))
+		c.Writer.Header().Set("Access-Control-Allow-Headers", cfg.GetString("allowheaders"))
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
+}

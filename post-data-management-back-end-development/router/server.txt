@@ -1,0 +1,78 @@
+package router
+
+import (
+	"context"
+	"net/http"
+
+	"pmdm/router/middlewares"
+
+	"github.com/gin-gonic/gin"
+	config "gitlab.cept.gov.in/it-2.0-common/api-config"
+	log "gitlab.cept.gov.in/it-2.0-common/api-log"
+)
+
+type Router struct {
+	*gin.Engine
+	cfg *config.Config
+}
+
+var ginserver *http.Server
+
+// func (s *Router) Start() error {
+// 	s.cfg.DBPort()
+
+// 	//address := cfg.GetString("server.addr")
+// 	var address string
+// 	if s.cfg.Exists("server.addr") {
+// 		address = s.cfg.GetString("server.addr")
+// 	} else {
+// 		address = ":8080"
+
+// 	}
+
+// 	ginserver = &http.Server{
+// 		Addr:    address,
+// 		Handler: s.Engine,
+// 	}
+// 	return ginserver.ListenAndServe()
+
+// }
+
+func (s *Router) Shutdown(ctx context.Context) error {
+
+	return ginserver.Shutdown(ctx)
+
+}
+
+func NewRouter(app *gin.Engine, cfg *config.Config) *Router {
+	return &Router{
+		Engine: app,
+		cfg:    cfg,
+	}
+}
+
+func Defaultgin(cfg *config.Config) *Router {
+
+	//add all no method, no path, no handler routes here
+	app := gin.New()
+	serverCfg, err := cfg.Of("server")
+	if err != nil {
+		log.Error(nil, "Error in getting server config")
+	}
+
+	corsCfg, err := serverCfg.Of("cors")
+	if err != nil {
+		log.Error(nil, "Error in getting cors config")
+	}
+	app.Use(
+		middlewares.Logger(),
+		middlewares.CORSMiddleware(corsCfg),
+		middlewares.AuthMiddleware(),
+		middlewares.Recover(),
+		middlewares.SetCtxLoggerMiddleware(),
+		middlewares.RequestResponseLoggerMiddleware(),
+	)
+
+	return NewRouter(app, cfg)
+
+}

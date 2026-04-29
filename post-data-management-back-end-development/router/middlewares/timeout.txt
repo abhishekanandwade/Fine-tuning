@@ -1,0 +1,22 @@
+package middlewares
+
+import (
+	"github.com/gin-gonic/gin"
+	config "gitlab.cept.gov.in/it-2.0-common/api-config"
+)
+
+type timeoutkey string
+
+const ServerTimeOutKey timeoutkey = "timeout"
+
+func Timeout(cfg *config.Config) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx := c.Request.Context()
+		// t:=cfg.GetInt("timeout")
+
+		// ctx = context.WithTimeout(ctx,t*time.Second )
+
+		c.Request = c.Request.WithContext(ctx)
+		c.Next()
+	}
+}

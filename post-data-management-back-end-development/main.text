@@ -1,0 +1,236 @@
+// Swagger
+//
+//	@title                       Post Management Data Management API
+//	@version                     1.0
+//	@description                 A comprehensive API for managing Post Management Data Management, offering endpoints for creation, update, deletion, and retrieval of Posts Data.
+//	@termsOfService              http://cept.gov.in/terms
+//	@contact.name                API Support Team
+//	@contact.url                 http://cept.gov.in/support
+//	@contact.email               support_cept@indiapost.gov.in
+//	@license.name                Apache 2.0
+//	@license.url                 http://www.apache.org/licenses/LICENSE-2.0.html
+//	@host                        localhost:8080
+//	@BasePath                    /v1
+//	@schemes                     http https
+package main
+
+import (
+	"context"
+	"fmt"
+	"go/ast"
+	"go/parser"
+	"go/token"
+	"net/http"
+	"os"
+	"path/filepath"
+	"runtime/pprof"
+	"strings"
+	"time"
+
+	"go.uber.org/fx"
+
+	config "pmdm/config"
+
+	"pmdm/handler"
+	r "pmdm/route"
+
+	authz "gitlab.cept.gov.in/it-2.0-common/api-authz"
+	dblib "gitlab.cept.gov.in/it-2.0-common/api-db"
+	log "gitlab.cept.gov.in/it-2.0-common/api-log"
+)
+
+func NewDB(c config.Econfig, lc fx.Lifecycle) (*dblib.DB, error) {
+	// Step 1: Initialize the DB configuration
+	dbConfig := dblib.DBConfig{
+		DBUsername:        c.DBUsername(),
+		DBPassword:        c.DBPassword(),
+		DBHost:            c.DBHost(),
+		DBPort:            c.DBPort(),
+		DBDatabase:        c.DBDatabase(),
+		Schema:            "pmdm",
+		MaxConns:          int32(c.MaxConns()),
+		MinConns:          int32(c.MinConns()),
+		MaxConnLifetime:   time.Duration(c.MaxConnLifetime()),   // In minutes
+		MaxConnIdleTime:   time.Duration(c.MaxConnIdleTime()),   // In minutes
+		HealthCheckPeriod: time.Duration(c.HealthCheckPeriod()), // In minutes
+		AppName:           c.AppName(),
+	}
+	// Step 2: Prepare the DB configuration (validate and set defaults)
+	preparedConfig := dblib.NewDefaultDbFactory().NewPreparedDBConfig(dbConfig)
+
+	// Step 3: Establish the database connection
+	db, err := dblib.NewDefaultDbFactory().CreateConnection(preparedConfig)
+
+	if err != nil {
+		log.Error(nil, "error in db connection %s", err)
+		return nil, err
+	}
+	log.Info(nil, "Successfully connected to the database %s", c.DBConnection())
+
+	lc.Append(fx.Hook{
+		OnStart: func(ctx context.Context) error {
+			return db.Ping()
+		},
+		OnStop: func(ctx context.Context) error {
+
+			db.Close()
+			return nil
+		},
+	})
+
+	return db, nil
+}
+
+func NewRouter(c config.Econfig, db *dblib.DB) (*handler.Router, error) {
+	router, err := r.Routes(db, c)
+	if err != nil {
+		log.Fatal(nil, "Error initializing router %s", err.Error())
+		os.Exit(1)
+	}
+	return router, err
+}
+
+func NewServer(lc fx.Lifecycle, c config.Econfig, router *handler.Router) *http.Server {
+	s := &http.Server{
+		Addr:    ":" + c.HttpPort(),
+		Handler: router,
+	}
+	return s
+}
+
+func countMethodsAndParams(root string) {
+	totalParams := 0
+	totalMethods := 0
+
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !strings.HasSuffix(path, ".go") {
+			return nil
+		}
+
+		fset := token.NewFileSet()
+		node, err := parser.ParseFile(fset, path, nil, parser.AllErrors)
+		if err != nil {
+			return err
+		}
+
+		ast.Inspect(node, func(n ast.Node) bool {
+			fn, ok := n.(*ast.FuncDecl)
+			if ok {
+				totalMethods++
+				if fn.Type.Params != nil {
+					totalParams += len(fn.Type.Params.List)
+				}
+			}
+			return true
+		})
+
+		return nil
+	})
+
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	fmt.Printf("Total methods: %d\n", totalMethods)
+	fmt.Printf("Total parameters: %d\n", totalParams)
+}
+
+func main() {
+	f1, err := os.Create("cpu.prof")
+	if err != nil {
+		panic(err)
+	}
+	defer f1.Close()
+
+	err = pprof.StartCPUProfile(f1)
+	if err != nil {
+		panic(err)
+	}
+	defer pprof.StopCPUProfile()
+
+	// defer profile.Start(profile.CPUProfile, profile.ProfilePath("C:/Users/acer/Downloads/delivery-management-back-end-dev_cluster")).Stop()
+	f, err := os.Create("memory.prof")
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	if err := pprof.WriteHeapProfile(f); err != nil {
+		panic(err)
+	}
+
+	countMethodsAndParams(".") // Call the function to count methods and parameters
+	config.InitConfig()
+	config.InitMinio()
+	c := config.Load()
+	err = logInit(c)
+	if err != nil {
+		fmt.Println("Error in log init", err)
+	}
+	duration, err := time.ParseDuration(c.ShutDownTime())
+	if err != nil {
+		log.Error(nil, "Error in parsing duration", err.Error())
+	}
+
+	defaultTimeOut, err := time.ParseDuration(c.GetAuthDefaultTimeout())
+	if err != nil {
+		log.Error(nil, "Error in parsing duration", err.Error())
+	}
+
+	defaultRetryWait, err := time.ParseDuration(c.GetAuthDefaultRetryWait())
+	if err != nil {
+		log.Error(nil, "Error in parsing duration", err.Error())
+	}
+
+	maxRetryWait, err := time.ParseDuration(c.GetAuthDefaultMaxRetryWait())
+	if err != nil {
+		log.Error(nil, "Error in parsing duration", err.Error())
+	}
+
+	err = authz.Init(authz.ClientConfig{
+		Timeout:      defaultTimeOut,
+		RetryWait:    defaultRetryWait,
+		MaxRetryWait: maxRetryWait,
+		MaxRetries:   c.GetAuthDefaultMaxRetries(),
+		AppName:      c.AppName(),
+	})
+
+	app := fx.New(
+		fx.Supply(c),
+		fx.Provide(NewDB, NewRouter, NewServer),
+		fx.Invoke(handler.NewValidatorService, func(lc fx.Lifecycle,server *http.Server) {
+			lc.Append(fx.Hook{
+				OnStart: func(context.Context) error {
+					go server.ListenAndServe()
+					return nil
+				},
+				OnStop: func(ctx context.Context) error {
+					handler.SetIsShuttingDown(true)
+					shutdownCtx, cancel := context.WithTimeout(ctx, duration)
+					defer cancel()
+					return server.Shutdown(shutdownCtx)
+				},
+			})
+		}),
+	)
+
+	app.Run()
+
+}
+
+func logInit(config config.Econfig) error {
+	logFactory := log.NewDefaultLoggerFactory()
+	e := logFactory.Create(
+		log.WithServiceName(config.AppName()),
+		log.WithLevel(log.FetchLogLevel(config.LogLevel())),
+		log.WithOutputWriter(os.Stdout),
+	)
+	if e != nil {
+		return e
+	}
+	return nil
+}

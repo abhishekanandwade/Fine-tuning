@@ -1,0 +1,49 @@
+AppName: go-pmdm
+AppEnv: development
+#AppEnv: production
+
+minio:
+  url: s3.cept.gov.in
+  accessKey: "ncMdhCXFXoq8a5fKWduA"
+  secretKey: "uMfja1erWdKp1LIF5zjnoLuHe48z8KrF6wJQjWbB"
+  bucketName: hr1
+
+HttpUrl: 127.0.0.1
+HttpPort: 8080
+HttpAllowedOrigins: "*"
+loglevel: info
+
+DBConnection: postgres
+# DBHost: 10.20.84.24
+DBHost: 10.20.166.46
+DBPort: 5432
+DBdatabase: pmdmdb
+DBUsername: pmdm_rw_user
+DBPassword: DoPrw@123
+
+
+RedisServer: localhost:6379
+RedisPassword: 
+
+TokenSymmetricKey: 12345678901234567890123456789012
+TokenDuration: 15m
+ShutDownTime: 1s
+ShutDowntype: 
+
+ClientTimout: 2
+ResponseTimeout: 2s
+
+MaxConns: 20
+MinConns: 5
+MaxConnLifetime: 20
+MaxConnIdleTime: 5
+HealthCheckPeriod: 1
+HealthCheckTimeout: 10
+
+AuthDefaultTimeout      : 10s
+AuthDefaultMaxRetries   : 3
+AuthDefaultRetryWait    : 1s
+AuthDefaultMaxRetryWait : 3s
+
+DBQueryTimeoutLow: 2s
+DBQueryTimeoutMed: 5s
