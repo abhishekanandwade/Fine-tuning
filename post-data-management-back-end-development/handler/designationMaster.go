@@ -81,7 +81,7 @@ func (dmh *DesignationMasterHandler) ListDesignations(ctx *gin.Context) {
 //	@Failure		409		{object}	apierrors.APIErrorResponse								"Data conflict error"
 //	@Failure		500		{object}	apierrors.APIErrorResponse								"Internal server error"
 //	@Router			/post-management/designations [get]
-func (de *DesignationMasterHandler) ListAndFilterDesignationsHandler(ctx *gin.Context) {
+func (de *DesignationMasterHandler) (ctx *gin.Context) {
 	var req DesignationMasterListRequest
 
 	// Bind query parameters

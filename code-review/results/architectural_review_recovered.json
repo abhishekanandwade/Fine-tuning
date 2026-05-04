@@ -1,0 +1,203 @@
+{
+  "repo_path": "C:\\Users\\knchaitr\\OneDrive - Hewlett Packard Enterprise\\CoE Team\\Fine-tuning\\post-data-management-back-end-development",
+  "total_files_scanned": 33,
+  "repo_files": 9,
+  "handler_files": 13,
+  "total_findings": 11,
+  "findings_by_rule": {
+    "HANDLER-001": 1,
+    "REPO-001": 8,
+    "REPO-002": 2
+  },
+  "findings": [
+    {
+      "rule_id": "HANDLER-001",
+      "severity": "HIGH",
+      "category": "architecture",
+      "title": "Handler must not call more than one repository/service method directly",
+      "file": "handler/reports.go",
+      "function": "FetchAllPostsByDivisionHandler",
+      "line_start": 26,
+      "line_end": 70,
+      "issue": "Handler must not call more than one repository/service method directly (deterministic pre-filter; LLM disabled).",
+      "offending_lines": [
+        "line 40: officeType, err := pmh.svc.GetOfficeTypeByID(ctx, req.OfficeID)",
+        "line 53: masterList, err := pmh.svc.FetchAllPostsByDivisionOfficeID(ctx, req.OfficeID)"
+      ],
+      "suggested_fix": "Introduce a service / use-case layer (e.g. UserService.CreateWithProfile) that encapsulates the multi-repository orchestration. The handler calls exactly one service method; the service method calls as many repositories as needed, managing transactions internally."
+    },
+    {
+      "rule_id": "REPO-001",
+      "severity": "HIGH",
+      "category": "architecture",
+      "title": "Repository function must contain exactly one database call",
+      "file": "repo/postgres/cadreMaster.go",
+      "function": "ListCadresQry",
+      "line_start": 88,
+      "line_end": 101,
+      "issue": "Repository function must contain exactly one database call (deterministic pre-filter; LLM disabled).",
+      "offending_lines": [
+        "line 90: ctx, cancel := context.WithTimeout(gctx.Request.Context(), cmr.cfg.GetDuration(\"db.QueryTimeoutMed\"))",
+        "line 100: return dblib.SelectRows(ctx, cmr.db, query, pgx.RowToStructByNameLax[domain.CadreMaster])"
+      ],
+      "suggested_fix": "Split this function into multiple single-responsibility repository functions, one per DB operation. If the operations are logically atomic, wrap them in a single database transaction and issue the calls through the transaction handle inside a dedicated helper."
+    },
+    {
+      "rule_id": "REPO-001",
+      "severity": "HIGH",
+      "category": "architecture",
+      "title": "Repository function must contain exactly one database call",
+      "file": "repo/postgres/cadreMaster.go",
+      "function": "UpdateCadreMasterQuery",
+      "line_start": 127,
+      "line_end": 144,
+      "issue": "Repository function must contain exactly one database call (deterministic pre-filter; LLM disabled).",
+      "offending_lines": [
+        "line 128: ctx, cancel := context.WithTimeout(gctx.Request.Context(), cmr.cfg.GetDuration(\"db.QueryTimeoutMed\"))",
+        "line 138: resp, err := dblib.UpdateReturning(ctx, cmr.db, queryUpdate, pgx.RowToStructByNameLax[domain.CadreMaster])"
+      ],
+      "suggested_fix": "Split this function into multiple single-responsibility repository functions, one per DB operation. If the operations are logically atomic, wrap them in a single database transaction and issue the calls through the transaction handle inside a dedicated helper."
+    },
+    {
+      "rule_id": "REPO-001",
+      "severity": "HIGH",
+      "category": "architecture",
+      "title": "Repository function must contain exactly one database call",
+      "file": "repo/postgres/designationMaster.go",
+      "function": "ListDesignationsQry",
+      "line_start": 48,
+      "line_end": 59,
+      "issue": "Repository function must contain exactly one database call (deterministic pre-filter; LLM disabled).",
+      "offending_lines": [
+        "line 50: ctx, cancel := context.WithTimeout(gctx.Request.Context(), dmr.cfg.GetDuration(\"db.QueryTimeoutMed\"))",
+        "line 58: return dblib.SelectRows(ctx, dmr.db, query, pgx.RowToStructByNameLax[domain.DesignationMaster])"
+      ],
+      "suggested_fix": "Split this function into multiple single-responsibility repository functions, one per DB operation. If the operations are logically atomic, wrap them in a single database transaction and issue the calls through the transaction handle inside a dedicated helper."
+    },
+    {
+      "rule_id": "REPO-001",
+      "severity": "HIGH",
+      "category": "architecture",
+      "title": "Repository function must contain exactly one database call",
+      "file": "repo/postgres/designationMaster.go",
+      "function": "UpdateDesignationMasterQuery",
+      "line_start": 154,
+      "line_end": 171,
+      "issue": "Repository function must contain exactly one database call (deterministic pre-filter; LLM disabled).",
+      "offending_lines": [
+        "line 155: ctx, cancel := context.WithTimeout(gctx.Request.Context(), dmr.cfg.GetDuration(\"db.QueryTimeoutMed\"))",
+        "line 165: resp, err := dblib.UpdateReturning(ctx, dmr.db, queryUpdate, pgx.RowToStructByNameLax[domain.DesignationMaster])"
+      ],
+      "suggested_fix": "Split this function into multiple single-responsibility repository functions, one per DB operation. If the operations are logically atomic, wrap them in a single database transaction and issue the calls through the transaction handle inside a dedicated helper."
+    },
+    {
+      "rule_id": "REPO-001",
+      "severity": "HIGH",
+      "category": "architecture",
+      "title": "Repository function must contain exactly one database call",
+      "file": "repo/postgres/postManagementMaster.go",
+      "function": "GetDocumentsByOfficeID",
+      "line_start": 833,
+      "line_end": 852,
+      "issue": "Repository function must contain exactly one database call (deterministic pre-filter; LLM disabled).",
+      "offending_lines": [
+        "line 835: query := psql.Select(",
+        "line 840: documents, err := dblib.SelectRows(ctx, r.db, query, pgx.RowToStructByNameLax[domain.Document])"
+      ],
+      "suggested_fix": "Split this function into multiple single-responsibility repository functions, one per DB operation. If the operations are logically atomic, wrap them in a single database transaction and issue the calls through the transaction handle inside a dedicated helper."
+    },
+    {
+      "rule_id": "REPO-001",
+      "severity": "HIGH",
+      "category": "architecture",
+      "title": "Repository function must contain exactly one database call",
+      "file": "repo/postgres/postManagementMaster.go",
+      "function": "RejectPostManagementMaker",
+      "line_start": 1010,
+      "line_end": 1051,
+      "issue": "Repository function must contain exactly one database call (deterministic pre-filter; LLM disabled).",
+      "offending_lines": [
+        "line 1026: batch.Queue(`",
+        "line 1035: br := pmr.db.SendBatch(ctx, batch)",
+        "line 1039: _, err := br.Exec()"
+      ],
+      "suggested_fix": "Split this function into multiple single-responsibility repository functions, one per DB operation. If the operations are logically atomic, wrap them in a single database transaction and issue the calls through the transaction handle inside a dedicated helper."
+    },
+    {
+      "rule_id": "REPO-001",
+      "severity": "HIGH",
+      "category": "architecture",
+      "title": "Repository function must contain exactly one database call",
+      "file": "repo/postgres/postManagementMaster.go",
+      "function": "CreatePostManagementMasterQuery",
+      "line_start": 1676,
+      "line_end": 1878,
+      "issue": "Repository function must contain exactly one database call (deterministic pre-filter; LLM disabled).",
+      "offending_lines": [
+        "line 1741: err := pmr.db.QueryRow(ctx, queryMaster,",
+        "line 1820: _, err = pmr.db.Exec(ctx, queryMaker,"
+      ],
+      "suggested_fix": "Split this function into multiple single-responsibility repository functions, one per DB operation. If the operations are logically atomic, wrap them in a single database transaction and issue the calls through the transaction handle inside a dedicated helper."
+    },
+    {
+      "rule_id": "REPO-002",
+      "severity": "CRITICAL",
+      "category": "performance",
+      "title": "Database call must not appear inside a for/range loop (N+1 anti-pattern)",
+      "file": "repo/postgres/postManagementMaster.go",
+      "function": "CreatePostManagementMasterQuery",
+      "line_start": 1676,
+      "line_end": 1878,
+      "issue": "Database call must not appear inside a for/range loop (N+1 anti-pattern) (deterministic pre-filter; LLM disabled).",
+      "offending_lines": [
+        "line 1741: err := pmr.db.QueryRow(ctx, queryMaster,",
+        "line 1820: _, err = pmr.db.Exec(ctx, queryMaker,"
+      ],
+      "suggested_fix": "Collect all required identifiers first, then issue a single bulk query using IN ($1, $2, ...) or pgx SendBatch. Alternatively, use a JOIN or a CTE to retrieve all related data in one round-trip."
+    },
+    {
+      "rule_id": "REPO-001",
+      "severity": "HIGH",
+      "category": "architecture",
+      "title": "Repository function must contain exactly one database call",
+      "file": "repo/postgres/postManagementMaster.go",
+      "function": "CreatePost",
+      "line_start": 2103,
+      "line_end": 2183,
+      "issue": "Repository function must contain exactly one database call (deterministic pre-filter; LLM disabled).",
+      "offending_lines": [
+        "line 2162: err := ap.db.QueryRow(dbCtx, insertPostQuery,",
+        "line 2174: _, err = ap.db.Exec(dbCtx, insertPostMappingQuery, postID)"
+      ],
+      "suggested_fix": "Split this function into multiple single-responsibility repository functions, one per DB operation. If the operations are logically atomic, wrap them in a single database transaction and issue the calls through the transaction handle inside a dedicated helper."
+    },
+    {
+      "rule_id": "REPO-002",
+      "severity": "CRITICAL",
+      "category": "performance",
+      "title": "Database call must not appear inside a for/range loop (N+1 anti-pattern)",
+      "file": "repo/postgres/posttopostmapping.go",
+      "function": "ApprovePostMappingDetailMaker2",
+      "line_start": 1322,
+      "line_end": 1421,
+      "issue": "Database call must not appear inside a for/range loop (N+1 anti-pattern) (deterministic pre-filter; LLM disabled).",
+      "offending_lines": [
+        "line 1362: cmdTag, err := tx.Exec(ctx, updateQuery, updateArgs...)",
+        "line 1408: row := tx.QueryRow(ctx, insertQuery, insertValues...)"
+      ],
+      "suggested_fix": "Collect all required identifiers first, then issue a single bulk query using IN ($1, $2, ...) or pgx SendBatch. Alternatively, use a JOIN or a CTE to retrieve all related data in one round-trip."
+    }
+  ],
+  "summary": {
+    "CRITICAL": 2,
+    "HIGH": 9,
+    "MEDIUM": 0,
+    "LOW": 0,
+    "total": 11,
+    "rules_violated": [
+      "HANDLER-001",
+      "REPO-001",
+      "REPO-002"
+    ]
+  }
+}

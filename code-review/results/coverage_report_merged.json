@@ -1,0 +1,1070 @@
+{
+  "repo_path": "C:\\Users\\knchaitr\\OneDrive - Hewlett Packard Enterprise\\CoE Team\\Fine-tuning\\post-data-management-back-end-development",
+  "report_used": "C:\\Users\\knchaitr\\OneDrive - Hewlett Packard Enterprise\\CoE Team\\Fine-tuning\\code-review\\results\\architectural_review_merged.json",
+  "summary": {
+    "REPO-001": {
+      "deterministic_candidates": 36,
+      "agent_confirmed": 36,
+      "agent_missed": 0,
+      "agent_extra": 0,
+      "recall_pct": 100.0
+    },
+    "REPO-002": {
+      "deterministic_candidates": 17,
+      "agent_confirmed": 17,
+      "agent_missed": 0,
+      "agent_extra": 0,
+      "recall_pct": 100.0
+    },
+    "HANDLER-001": {
+      "deterministic_candidates": 22,
+      "agent_confirmed": 22,
+      "agent_missed": 0,
+      "agent_extra": 0,
+      "recall_pct": 100.0
+    },
+    "OVERALL": {
+      "deterministic_candidates": 75,
+      "agent_confirmed": 75,
+      "agent_missed": 0,
+      "agent_extra": 0,
+      "recall_pct": 100.0,
+      "files_scanned": 33,
+      "repo_files": 9,
+      "handler_files": 13
+    }
+  },
+  "missed": {
+    "REPO-001": [],
+    "REPO-002": [],
+    "HANDLER-001": []
+  },
+  "confirmed": {
+    "REPO-001": [
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/cadreMaster.go",
+        "function": "CadreMasterByGroupCodeQuery",
+        "line_start": 36,
+        "line_end": 51,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 37: ctx, cancel := context.WithTimeout(gctx.Request.Context(), cmr.cfg.GetDuration(\"db.QueryTimeoutLow\"))",
+          "line 50: return dblib.SelectRows(ctx, cmr.db, query, pgx.RowToStructByNameLax[domain.CadreMaster])"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/cadreMaster.go",
+        "function": "CreateCadreMasterQuery",
+        "line_start": 53,
+        "line_end": 85,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 54: ctx, cancel := context.WithTimeout(gctx.Request.Context(), cmr.cfg.GetDuration(\"db.QueryTimeoutMed\"))",
+          "line 61: resp, err := dblib.InsertReturning(ctx, cmr.db, queryInsertTransaction, pgx.RowToStructByNameLax[domain.CadreMaster])",
+          "line 79: _, err = dblib.Update(ctx, cmr.db, queryUpdateGroupMaster)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/cadreMaster.go",
+        "function": "ListCadresQry",
+        "line_start": 88,
+        "line_end": 101,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 90: ctx, cancel := context.WithTimeout(gctx.Request.Context(), cmr.cfg.GetDuration(\"db.QueryTimeoutMed\"))",
+          "line 100: return dblib.SelectRows(ctx, cmr.db, query, pgx.RowToStructByNameLax[domain.CadreMaster])"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/cadreMaster.go",
+        "function": "ListAllCadresQry",
+        "line_start": 104,
+        "line_end": 125,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 105: ctx, cancel := context.WithTimeout(gctx.Request.Context(), cmr.cfg.GetDuration(\"db.QueryTimeoutMed\"))",
+          "line 124: return dblib.SelectRows(ctx, cmr.db, query, pgx.RowToStructByNameLax[domain.CadreMaster])"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/cadreMaster.go",
+        "function": "UpdateCadreMasterQuery",
+        "line_start": 127,
+        "line_end": 144,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 128: ctx, cancel := context.WithTimeout(gctx.Request.Context(), cmr.cfg.GetDuration(\"db.QueryTimeoutMed\"))",
+          "line 138: resp, err := dblib.UpdateReturning(ctx, cmr.db, queryUpdate, pgx.RowToStructByNameLax[domain.CadreMaster])"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/designationMaster.go",
+        "function": "DesignationMasterByGroupAndCadreQuery",
+        "line_start": 34,
+        "line_end": 45,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 35: ctx, cancel := context.WithTimeout(gctx.Request.Context(), de.cfg.GetDuration(\"db.QueryTimeoutMed\"))",
+          "line 44: return dblib.SelectRows(ctx, de.db, query, pgx.RowToStructByNameLax[domain.DesignationMaster])"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/designationMaster.go",
+        "function": "ListDesignationsQry",
+        "line_start": 48,
+        "line_end": 59,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 50: ctx, cancel := context.WithTimeout(gctx.Request.Context(), dmr.cfg.GetDuration(\"db.QueryTimeoutMed\"))",
+          "line 58: return dblib.SelectRows(ctx, dmr.db, query, pgx.RowToStructByNameLax[domain.DesignationMaster])"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/designationMaster.go",
+        "function": "CreateDesignationMasterQuery",
+        "line_start": 90,
+        "line_end": 119,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 91: ctx, cancel := context.WithTimeout(gctx.Request.Context(), dmr.cfg.GetDuration(\"db.QueryTimeoutMed\"))",
+          "line 102: data, err := dblib.SelectOne(ctx, dmr.db, query, pgx.RowToStructByNameLax[domain.DesignationMaster])",
+          "line 112: resp, err := dblib.InsertReturning(ctx, dmr.db, queryInsertTransaction, pgx.RowToStructByNameLax[domain.DesignationMaster])"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/designationMaster.go",
+        "function": "ListAllDesignationsQry",
+        "line_start": 122,
+        "line_end": 152,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 123: ctx, cancel := context.WithTimeout(gctx.Request.Context(), dmr.cfg.GetDuration(\"db.QueryTimeoutMed\"))",
+          "line 151: return dblib.SelectRows(ctx, dmr.db, query, pgx.RowToStructByNameLax[domain.DesignationMaster])"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/designationMaster.go",
+        "function": "UpdateDesignationMasterQuery",
+        "line_start": 154,
+        "line_end": 171,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 155: ctx, cancel := context.WithTimeout(gctx.Request.Context(), dmr.cfg.GetDuration(\"db.QueryTimeoutMed\"))",
+          "line 165: resp, err := dblib.UpdateReturning(ctx, dmr.db, queryUpdate, pgx.RowToStructByNameLax[domain.DesignationMaster])"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "CreatePostManagementMakerQuery",
+        "line_start": 198,
+        "line_end": 342,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 273: err = pmr.db.QueryRow(ctx, queryGetMasterMakerID, post.PostID).Scan(&masterMakerID)",
+          "line 287: _, err = pmr.db.Exec(ctx, queryMasterMakerb, newMasterMakerId, post.PostID)",
+          "line 334: post, err := dblib.InsertReturning(ctx, pmr.db, query, pgx.RowToAddrOfStructByPos[domain.PostManagementMaster3])"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "ApprovePostManagementMakerQuery",
+        "line_start": 356,
+        "line_end": 457,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 378: br := pmr.db.SendBatch(ctx, selectBatch)",
+          "line 391: err := br.QueryRow().Scan(",
+          "line 440: batchResults := pmr.db.SendBatch(ctx, updateBatch)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "ApprovePostManagementMakerForAbolishPost",
+        "line_start": 520,
+        "line_end": 593,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 542: br := pmr.db.SendBatch(ctx, selectBatch)",
+          "line 552: err := br.QueryRow().Scan(&newOfficeID, &newOfficeName, &status, &officeID)",
+          "line 576: batchResults := pmr.db.SendBatch(ctx, updateBatch)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "InsertDocument",
+        "line_start": 772,
+        "line_end": 804,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 775: query := psql.Insert(\"pmdm.document_master_pmdm\").",
+          "line 794: err = r.db.QueryRow(ctx, sql, args...).Scan(&postID)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "GetDocumentsByOfficeID",
+        "line_start": 833,
+        "line_end": 852,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 835: query := psql.Select(",
+          "line 840: documents, err := dblib.SelectRows(ctx, r.db, query, pgx.RowToStructByNameLax[domain.Document])"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "RestoredSurplusPost",
+        "line_start": 903,
+        "line_end": 1009,
+        "deterministic_hits": 5,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 920: err := pmr.db.QueryRow(ctx, `",
+          "line 947: batch.Queue(`",
+          "line 954: batch.Queue(`",
+          "line 978: batch.Queue(`",
+          "line 995: batchResults := pmr.db.SendBatch(ctx, batch)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "RejectPostManagementMaker",
+        "line_start": 1010,
+        "line_end": 1051,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1026: batch.Queue(`",
+          "line 1035: br := pmr.db.SendBatch(ctx, batch)",
+          "line 1039: _, err := br.Exec()"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "ApprovePostManagementMakerForExchangePost",
+        "line_start": 1053,
+        "line_end": 1140,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1075: br := pmr.db.SendBatch(ctx, selectBatch)",
+          "line 1085: err := br.QueryRow().Scan(&newOfficeID, &newOfficeName, &status, &officeID, &officeName, &exchangePostID)",
+          "line 1123: batchResults := pmr.db.SendBatch(ctx, updateBatch)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "ApprovePostManagementMasterWithMaker",
+        "line_start": 1142,
+        "line_end": 1327,
+        "deterministic_hits": 12,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1168: err := pmr.db.QueryRow(ctx, queryGetMasterMakerID, postID).Scan(&masterMakerID)",
+          "line 1181: _, err = pmr.db.Exec(ctx, queryMasterMaker, newMasterMakerId, postID)",
+          "line 1191: _, err = pmr.db.Exec(ctx, queryMasterMakerb, newMasterMakerId, postID)",
+          "line 1204: err = pmr.db.QueryRow(ctx, postStatus, postID).Scan(&newPost)",
+          "line 1215: batch.Queue(queryMaker, approveStatus, approvedBy, currentTime, postID, remarks, approvedBy, time.Now(), masterMakerID)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "GetPostManagementMasterWithMaker",
+        "line_start": 1329,
+        "line_end": 1396,
+        "deterministic_hits": 4,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1337: masterMakerQuery := psql.Select(\"COALESCE(master_maker_id, '') AS master_maker_id\").",
+          "line 1347: rows, err := svc.db.Query(ctx, query, args...)",
+          "line 1367: queryBuilder := psql.Select(",
+          "line 1395: return dblib.SelectRows(ctx, svc.db, queryBuilder, pgx.RowToStructByNameLax[domain.PostManagementMaker])"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "CreatePostManagementMasterQuery",
+        "line_start": 1676,
+        "line_end": 1878,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1741: err := pmr.db.QueryRow(ctx, queryMaster,",
+          "line 1820: _, err = pmr.db.Exec(ctx, queryMaker,"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "CreatePost",
+        "line_start": 2103,
+        "line_end": 2183,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 2162: err := ap.db.QueryRow(dbCtx, insertPostQuery,",
+          "line 2174: _, err = ap.db.Exec(dbCtx, insertPostMappingQuery, postID)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "GetDivisionSummaries",
+        "line_start": 3872,
+        "line_end": 3969,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 3928: rows, err := r.db.Query(gctx, baseQuery, params...)",
+          "line 3962: row := r.db.QueryRow(gctx, countQuery, countParams...)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "GetHierarchySummaries",
+        "line_start": 4073,
+        "line_end": 4185,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 4145: rows, err := r.db.Query(gctx, baseQuery, params...)",
+          "line 4178: row := r.db.QueryRow(gctx, countQuery, countParams...)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "GetOffices",
+        "line_start": 4302,
+        "line_end": 4383,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 4347: rows, err := r.db.Query(gctx, mainQuery, params...)",
+          "line 4376: countRow := r.db.QueryRow(ctx, countQuery, params[:queryIndex-1]...)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "FetchRegionSummary",
+        "line_start": 4600,
+        "line_end": 4696,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 4670: rows, err := r.db.Query(gctx, baseQuery, queryParams...)",
+          "line 4690: err = r.db.QueryRow(gctx, countQuery, queryParams[:paramIndex-1]...).Scan(&totalCount)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "DeletePostsbyOfficeIDRepo",
+        "line_start": 4987,
+        "line_end": 5037,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 5011: result, err := dblib.Update(ctx, pmr.db, query)",
+          "line 5018: result1, err1 := dblib.Update(ctx, pmr.db, query1)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "GetMulAuthPostID",
+        "line_start": 46,
+        "line_end": 113,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 60: empauthmasts, err := dblib.SelectRows(ctx, ear.db, query, pgx.RowToStructByNameLax[domain.PostMapMaster])",
+          "line 79: err = ear.db.QueryRow(ctx, sql1, args1...).Scan(&postid,",
+          "line 96: err = ear.db.QueryRow(ctx, sql2, args2...).Scan(&OfficeId)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "UpdateArrayOfEmpPostIDForParticularFieldQuery",
+        "line_start": 127,
+        "line_end": 253,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 186: rows, err := pmr.db.Query(ctx, sql, args...)",
+          "line 224: rows, err := pmr.db.Query(ctx, insertQuery, empPostID, OfficeID, fieldValue, time.Now())"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "CreatePostMappingDetailMaker",
+        "line_start": 652,
+        "line_end": 787,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 674: err := pmr.db.QueryRow(ctx, checkQuery, empPostID).Scan(&approveStatus)",
+          "line 697: _, err = pmr.db.Exec(ctx, updateQuery, values...)",
+          "line 734: rows, err := pmr.db.Query(ctx, sql, args...)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "ApprovePostMappingDetailMaker",
+        "line_start": 1067,
+        "line_end": 1151,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1072: tx, err := pmr.db.BeginTx(ctx, pgx.TxOptions{})",
+          "line 1100: cmdTag, err := tx.Exec(ctx, updateQuery, updateArgs...)",
+          "line 1132: row := tx.QueryRow(ctx, insertQuery,"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "ApprovePostMappingDetailMaker2",
+        "line_start": 1322,
+        "line_end": 1421,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1327: tx, err := pmr.db.BeginTx(ctx, pgx.TxOptions{})",
+          "line 1362: cmdTag, err := tx.Exec(ctx, updateQuery, updateArgs...)",
+          "line 1408: row := tx.QueryRow(ctx, insertQuery, insertValues...)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "SavePostMappings",
+        "line_start": 1695,
+        "line_end": 1798,
+        "deterministic_hits": 4,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1696: tx, err := s.db.Begin(ctx)",
+          "line 1738: err := tx.QueryRow(ctx, `SELECT EXISTS (SELECT 1 FROM pmdm.post_mapping_detail WHERE employee_post_id = $1)`, entry.PostID).Scan(&exists)",
+          "line 1769: _, err = tx.Exec(ctx, query, args...)",
+          "line 1789: _, err = tx.Exec(ctx, query, insertArgs...)"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "SavePostMappingsRepo",
+        "line_start": 1799,
+        "line_end": 1941,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1836: tx, err := s.db.Begin(ctx)",
+          "line 1935: if _, err := tx.Exec(ctx, query, valueArgs...); err != nil {"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "SavePostRedeploymentRepo2",
+        "line_start": 2729,
+        "line_end": 2876,
+        "deterministic_hits": 5,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 2768: row := tx.QueryRow(gctx, `",
+          "line 2824: br := tx.SendBatch(gctx, batch)",
+          "line 2828: if _, err := br.Exec(); err != nil {",
+          "line 2834: if _, err := br.Exec(); err != nil {",
+          "line 2839: if _, err := br.Exec(); err != nil {"
+        ]
+      },
+      {
+        "rule_id": "REPO-001",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "GetRedeployedPostAuthorityCharges",
+        "line_start": 3263,
+        "line_end": 3415,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 3293: countsRows, err := rmr.db.Query(gctx, countsQuery, post_id)",
+          "line 3357: detailRows, err := rmr.db.Query(gctx, detailQuery, post_id)"
+        ]
+      }
+    ],
+    "REPO-002": [
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "CreatePostManagementMakerQuery",
+        "line_start": 198,
+        "line_end": 342,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 273: err = pmr.db.QueryRow(ctx, queryGetMasterMakerID, post.PostID).Scan(&masterMakerID)",
+          "line 287: _, err = pmr.db.Exec(ctx, queryMasterMakerb, newMasterMakerId, post.PostID)"
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "ApprovePostManagementMakerQuery",
+        "line_start": 356,
+        "line_end": 457,
+        "deterministic_hits": 1,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 391: err := br.QueryRow().Scan("
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "ApprovePostManagementMakerForAbolishPost",
+        "line_start": 520,
+        "line_end": 593,
+        "deterministic_hits": 1,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 552: err := br.QueryRow().Scan(&newOfficeID, &newOfficeName, &status, &officeID)"
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "RestoredSurplusPost",
+        "line_start": 903,
+        "line_end": 1009,
+        "deterministic_hits": 4,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 920: err := pmr.db.QueryRow(ctx, `",
+          "line 947: batch.Queue(`",
+          "line 954: batch.Queue(`",
+          "line 978: batch.Queue(`"
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "RejectPostManagementMaker",
+        "line_start": 1010,
+        "line_end": 1051,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1026: batch.Queue(`",
+          "line 1039: _, err := br.Exec()"
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "ApprovePostManagementMakerForExchangePost",
+        "line_start": 1053,
+        "line_end": 1140,
+        "deterministic_hits": 1,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1085: err := br.QueryRow().Scan(&newOfficeID, &newOfficeName, &status, &officeID, &officeName, &exchangePostID)"
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "ApprovePostManagementMasterWithMaker",
+        "line_start": 1142,
+        "line_end": 1327,
+        "deterministic_hits": 11,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1168: err := pmr.db.QueryRow(ctx, queryGetMasterMakerID, postID).Scan(&masterMakerID)",
+          "line 1181: _, err = pmr.db.Exec(ctx, queryMasterMaker, newMasterMakerId, postID)",
+          "line 1191: _, err = pmr.db.Exec(ctx, queryMasterMakerb, newMasterMakerId, postID)",
+          "line 1204: err = pmr.db.QueryRow(ctx, postStatus, postID).Scan(&newPost)",
+          "line 1215: batch.Queue(queryMaker, approveStatus, approvedBy, currentTime, postID, remarks, approvedBy, time.Now(), masterMakerID)"
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "CreatePostManagementMasterQuery",
+        "line_start": 1676,
+        "line_end": 1878,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1741: err := pmr.db.QueryRow(ctx, queryMaster,",
+          "line 1820: _, err = pmr.db.Exec(ctx, queryMaker,"
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "CreatePost",
+        "line_start": 2103,
+        "line_end": 2183,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 2162: err := ap.db.QueryRow(dbCtx, insertPostQuery,",
+          "line 2174: _, err = ap.db.Exec(dbCtx, insertPostMappingQuery, postID)"
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/postManagementMaster.go",
+        "function": "PostManagementByOfficeIDVacant",
+        "line_start": 2267,
+        "line_end": 2293,
+        "deterministic_hits": 1,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 2283: err := ap.db.QueryRow(ctx, query, post.PostID).Scan(&exists)"
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "GetMulAuthPostID",
+        "line_start": 46,
+        "line_end": 113,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 79: err = ear.db.QueryRow(ctx, sql1, args1...).Scan(&postid,",
+          "line 96: err = ear.db.QueryRow(ctx, sql2, args2...).Scan(&OfficeId)"
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "UpdateArrayOfEmpPostIDForParticularFieldQuery",
+        "line_start": 127,
+        "line_end": 253,
+        "deterministic_hits": 1,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 224: rows, err := pmr.db.Query(ctx, insertQuery, empPostID, OfficeID, fieldValue, time.Now())"
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "CreatePostMappingDetailMaker",
+        "line_start": 652,
+        "line_end": 787,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 674: err := pmr.db.QueryRow(ctx, checkQuery, empPostID).Scan(&approveStatus)",
+          "line 697: _, err = pmr.db.Exec(ctx, updateQuery, values...)",
+          "line 734: rows, err := pmr.db.Query(ctx, sql, args...)"
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "ApprovePostMappingDetailMaker",
+        "line_start": 1067,
+        "line_end": 1151,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1100: cmdTag, err := tx.Exec(ctx, updateQuery, updateArgs...)",
+          "line 1132: row := tx.QueryRow(ctx, insertQuery,"
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "ApprovePostMappingDetailMaker2",
+        "line_start": 1322,
+        "line_end": 1421,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1362: cmdTag, err := tx.Exec(ctx, updateQuery, updateArgs...)",
+          "line 1408: row := tx.QueryRow(ctx, insertQuery, insertValues...)"
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "SavePostMappings",
+        "line_start": 1695,
+        "line_end": 1798,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1738: err := tx.QueryRow(ctx, `SELECT EXISTS (SELECT 1 FROM pmdm.post_mapping_detail WHERE employee_post_id = $1)`, entry.PostID).Scan(&exists)",
+          "line 1769: _, err = tx.Exec(ctx, query, args...)",
+          "line 1789: _, err = tx.Exec(ctx, query, insertArgs...)"
+        ]
+      },
+      {
+        "rule_id": "REPO-002",
+        "file": "repo/postgres/posttopostmapping.go",
+        "function": "SavePostMappingsRepo",
+        "line_start": 1799,
+        "line_end": 1941,
+        "deterministic_hits": 1,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1935: if _, err := tx.Exec(ctx, query, valueArgs...); err != nil {"
+        ]
+      }
+    ],
+    "HANDLER-001": [
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/cadreMaster.go",
+        "function": "ListCadresHandler",
+        "line_start": 52,
+        "line_end": 113,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 74: cadreList, err := cmh.svc.CadreMasterByGroupCodeQuery(ctx, req.GroupCode, req.MetaDataRequest)",
+          "line 98: cadreList, err := cmh.svc.ListCadresQry(ctx, req.MetaDataRequest)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/designationMaster.go",
+        "function": "ListAndFilterDesignationsHandler",
+        "line_start": 84,
+        "line_end": 128,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 104: designationList, err := de.svc.DesignationMasterByGroupAndCadreQuery(ctx, req.GroupCode, req.CadreCode, req.MetaDataRequest)",
+          "line 111: allDesignationTypes, err := de.svc.ListDesignationsQry(ctx)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/optimised.go",
+        "function": "UploadFile",
+        "line_start": 656,
+        "line_end": 730,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 698: err = emh.svc.UploadFile(ctx, file, objectName, fileType, header.Size)",
+          "line 718: err = emh.svc.InsertDocument(ctx, document)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/optimised.go",
+        "function": "DownloadFiles",
+        "line_start": 813,
+        "line_end": 918,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 834: documents, err := emh.svc.GetDocumentsByOfficeID(ctx, officeID)",
+          "line 866: object, err := emh.svc.DownloadFile(objectPath)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/optimised.go",
+        "function": "FetchPostsByOfficeIDAndMakerHandler",
+        "line_start": 2082,
+        "line_end": 2129,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 2104: postList, err = pmh.svc.PostManagementByOfficeIDMDWMaker(ctx, req.OfficeID, postID)",
+          "line 2111: postList, err = pmh.svc.PostManagementWithApprovedStatusOfMakerByOfficeID(ctx, req.OfficeID)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/optimised.go",
+        "function": "FetchEstablishmentRegisterHandler",
+        "line_start": 2155,
+        "line_end": 2213,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 2176: postList, err = pmh.svc.PostManagementByEstablishmentRegisterID(ctx, registerID)",
+          "line 2189: postList, err = pmh.svc.ViewEstablishmentRegisterByAuthority(ctx, officeID, req.OfficeType)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/optimised.go",
+        "function": "PostManagementByOfficeAndPostHandler",
+        "line_start": 2327,
+        "line_end": 2385,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 2351: postList, err = pmh.svc.PostManagementByOfficeIDQueryMDW(ctx, req.OfficeID, req.PostID, req.MetaDataRequest)",
+          "line 2359: postList, err = pmh.svc.PostManagementByCadreAndOfficeQuery(ctx, req.CadreName, req.OfficeID, req.MetaDataRequest)",
+          "line 2367: postList, err = pmh.svc.PostManagementByOfficeIDQuery(ctx, req.OfficeID)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/optimised.go",
+        "function": "PostManagementByOfficeIDHandler",
+        "line_start": 2860,
+        "line_end": 2911,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 2868: postList, err := ch.svc.PostManagementByOfficeID(ctx, req.OfficeID)",
+          "line 2885: vacantPost, err := ch.svc.PostManagementByOfficeIDVacant(ctx, postList, req.MetaDataRequest)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/optimised.go",
+        "function": "FetchPostsByOfficeIDHandler2",
+        "line_start": 3054,
+        "line_end": 3120,
+        "deterministic_hits": 4,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 3081: makerList, err = pmh.svc.PostManagementByOfficeIDMDWMaker(ctx, req.OfficeID, postID)",
+          "line 3088: masterList, err = pmh.svc.FetchVacantActivePostByOfficeID2(ctx, req.OfficeID)",
+          "line 3095: masterList, err = pmh.svc.FetchAllActivePostByOfficeCadre(ctx, req.OfficeID, cadreID)",
+          "line 3102: masterList, err = pmh.svc.FetchAllActivePostByOfficeID2(ctx, req.OfficeID)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/postManagementMaster.go",
+        "function": "UpdatePostDetailsbyPostIDHandler",
+        "line_start": 400,
+        "line_end": 436,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 409: postsavbl, err := pmh.svc.GetPostDetailsbyPostID(ctx, req.PostID)",
+          "line 422: _, err = pmh.svc.UpdatePostDetailsbyPostIDRepo(ctx, postManagementMasterUpdate)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/postManagementMaster.go",
+        "function": "GetCadreReport",
+        "line_start": 703,
+        "line_end": 767,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 711: summaryData, err := pmh.svc.GetCadreSummary(ctx, req.CadreId, req.Search, req.MetaDataRequest)",
+          "line 718: totalCount, err := pmh.svc.GetTotalCircleCount(ctx, req.CadreId, req.Search)",
+          "line 734: detailList, err = pmh.svc.GetDetailList(ctx, req.CadreId, req.Search)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/postManagementMaster.go",
+        "function": "GetCircleCadreReport",
+        "line_start": 794,
+        "line_end": 857,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 802: summaryData, err := pmh.svc.GetCircleSummary(ctx, req.CadreName, req.Search, req.MetaDataRequest)",
+          "line 809: totalCount, err := pmh.svc.GetTotalCircleCadreCount(ctx, req.CadreName, req.Search)",
+          "line 825: detailList, err = pmh.svc.GetCircleDetailList(ctx, req.CadreName, req.CircleOfficeID, req.Search)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/postManagementMaster.go",
+        "function": "GetDivisionsReport",
+        "line_start": 886,
+        "line_end": 955,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 894: summaries, count, err := pmh.svc.GetDivisionSummaries(ctx, req.CadreName, req.RegionOfficeId, req.Search, req.MetaDataRequest)",
+          "line 912: regionInfo, err := pmh.svc.GetRegionInfo(ctx, req.RegionOfficeId)",
+          "line 931: detailList, err = pmh.svc.GetDivisionDetail(ctx, req.CadreName, req.RegionOfficeId, req.DivisionOfficeId, req.Search)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/postManagementMaster.go",
+        "function": "GetHierarchyReport",
+        "line_start": 982,
+        "line_end": 1051,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 990: summaries, total, err := pmh.svc.GetHierarchySummaries(ctx, req.CadreName, req.ParentOfficeID, req.Search, req.MetaDataRequest)",
+          "line 1010: details, err = pmh.svc.GetHierarchyDetailList(ctx, req.CadreName, req.ParentOfficeID, req.Search)",
+          "line 1018: hierachyInfo, err := pmh.svc.GetHierarchyInfo(ctx, req.ParentOfficeID)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/postManagementMaster.go",
+        "function": "GetOfficeReport",
+        "line_start": 1080,
+        "line_end": 1150,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1088: data, totalCount, err := pmh.svc.GetOffices(ctx, req.DivisionOfficeId, req.CadreName, &req.Search, req.MetaDataRequest)",
+          "line 1095: info, err := pmh.svc.GetDivisionInfo(ctx, req.DivisionOfficeId)",
+          "line 1127: detailList, err = pmh.svc.DetailOfficeReport(ctx, req.CadreName, req.DivisionOfficeId, req.OfficeId, &req.Search)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/postManagementMaster.go",
+        "function": "GetPostReport",
+        "line_start": 1170,
+        "line_end": 1237,
+        "deterministic_hits": 4,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1178: posts, err := pmh.svc.FetchPosts(ctx, req)",
+          "line 1187: TotalFilled: pmh.svc.CountStatus(posts, \"Filled\"),",
+          "line 1188: TotalVacant: pmh.svc.CountStatus(posts, \"Vacant\"),",
+          "line 1193: context, err = pmh.svc.GetContextInfo(ctx, *req.OfficeID)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/postManagementMaster.go",
+        "function": "GetRegionHandler",
+        "line_start": 1266,
+        "line_end": 1329,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1282: summaries, totalCount, err := pmh.svc.FetchRegionSummary(ctx, request, req.MetaDataRequest)",
+          "line 1291: details, err = pmh.svc.FetchRegionDetails(ctx, request)",
+          "line 1299: circleInfo, err := pmh.svc.GetCircleInfo(ctx, req.CircleOfficeId)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/postManagementMaster.go",
+        "function": "DeletePostsbyOfficeIDHandler",
+        "line_start": 1503,
+        "line_end": 1557,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1511: posts, err := pmh.svc.GetPostsFilledVacantStatusDetailed(ctx, req.OfficeID)",
+          "line 1536: message, err := pmh.svc.DeletePostsbyOfficeIDRepo(ctx, req.OfficeID, req.UserID)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/postManagementMaster.go",
+        "function": "UpdatePostnameByPostIdByHandler",
+        "line_start": 1664,
+        "line_end": 1699,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 1673: postsavbl, err := pmh.svc.GetPostDetailsbyPostID(ctx, req.PostID)",
+          "line 1685: _, err = pmh.svc.UpdatePostNamebyPostIDRepo(ctx, req.PostID, req.PostName, req.Remarks, req.UpdatedBy)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/posttopostmapping.go",
+        "function": "SavePostRedeploymentHandler2",
+        "line_start": 796,
+        "line_end": 925,
+        "deterministic_hits": 5,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 814: valid, err := pmh.svc.IsPostOfficeMappingValid(ctx, req.PostID, req.RedeploymentFromOfficeID)",
+          "line 872: tx, err := pmh.svc.BeginTransaction(ctx)",
+          "line 888: err = pmh.svc.SavePostRedeploymentRepo2(ctx, tx, postRedeploymentLog, postManagementMasterUpdate, filename)",
+          "line 909: if err := pmh.svc.UploadFile(ctx, uploadedFile); err != nil {",
+          "line 912: if compErr := pmh.svc.CompensateFailedRedeployment(ctx, req.PostID, officeFilePath); compErr != nil {"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/posttopostmapping.go",
+        "function": "SavePostRedeploymentHandler",
+        "line_start": 940,
+        "line_end": 1010,
+        "deterministic_hits": 3,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 947: valid, err := pmh.svc.IsPostOfficeMappingValid(ctx, req.PostID, req.RedeploymentFromOfficeID)",
+          "line 974: tx, err := pmh.svc.BeginTransaction(ctx)",
+          "line 989: err = pmh.svc.SavePostRedeploymentRepo(ctx, tx, postRedeploymentLog, postManagementMasterUpdate)"
+        ]
+      },
+      {
+        "rule_id": "HANDLER-001",
+        "file": "handler/reports.go",
+        "function": "FetchAllPostsByDivisionHandler",
+        "line_start": 26,
+        "line_end": 70,
+        "deterministic_hits": 2,
+        "agent_detected": true,
+        "sample_hit_lines": [
+          "line 40: officeType, err := pmh.svc.GetOfficeTypeByID(ctx, req.OfficeID)",
+          "line 53: masterList, err := pmh.svc.FetchAllPostsByDivisionOfficeID(ctx, req.OfficeID)"
+        ]
+      }
+    ]
+  },
+  "extra": {
+    "REPO-001": [],
+    "REPO-002": [],
+    "HANDLER-001": []
+  }
+}

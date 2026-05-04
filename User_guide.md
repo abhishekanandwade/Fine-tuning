@@ -1,61 +1,56 @@
-# Path should be inside the code-reviw
+cd "C:\Users\knchaitr\OneDrive - Hewlett Packard Enterprise\CoE Team\Fine-tuning\code-review"
+$env:PYTHONIOENCODING="utf-8"
 
-# 1 simple RAG
-python pipeline/review_pipeline.py --repo "../template" --output "./results/test.json" --mode rag-only --ollama-model qwen2.5-coder:7b
+# 1. Initial agentic-RAG review (LLM-confirmed). Takes ~5–15 min on this repo.
+python -m pipeline.architectural_rag_agent `
+  --repo "..\post-data-management-back-end-development" `
+  --output results\architectural_review.json `
+  --ollama-model qwen2.5-coder:7b
 
-# 2 Agentic RAG
-python pipeline/review_pipeline.py --repo "../template" --output "./results/test_agentic.json" --mode rag-only --rag-mode agentic --ollama-model qwen2.5-coder:7b
+# 2. Grade coverage vs deterministic baseline (lists missed violations).
+python -m pipeline.evaluate_coverage `
+  --repo "..\post-data-management-back-end-development" `
+  --report results\architectural_review.json `
+  --output results\coverage_report.json `
+  --markdown results\coverage_report.md
 
-# Full help
-python pipeline/review_pipeline.py --help
+# 3. Recover the missed ones (instant, deterministic).
+python -m pipeline.architectural_rag_agent `
+  --repo "..\post-data-management-back-end-development" `
+  --output results\architectural_review_recovered.json `
+  --recover-from results\coverage_report.json --no-llm
 
-# Other modes
---mode hybrid           # RAG + fine-tuned model
---mode fine-tune-only   # Fine-tuned model without RAG
+# 4. Merge into final report + final coverage.
+python -m pipeline.merge_findings `
+  --inputs results\architectural_review.json results\architectural_review_recovered.json `
+  --output results\architectural_review_merged.json
 
-# Other Ollama models you have
---ollama-model deepseek-coder-v2:16b
---ollama-model llama3.2:latest
+python -m pipeline.evaluate_coverage `
+  --repo "..\post-data-management-back-end-development" `
+  --report results\architectural_review_merged.json `
+  --output results\coverage_report_merged.json `
+  --markdown results\coverage_report_merged.md
 
+# Final outputs to read
 
-# Evaluation
-# 1. makes the model review code and produce findings using simple RAG;
+1. Findings: results/         architectural_review_merged.json — 75 violations across REPO-001, REPO-002, HANDLER-001
+2. Grade: results/coverage_report_merged.md — should show 100% recall
 
-python pipeline/review_pipeline.py `
-    --repo ./benchmarks/seeded_repo `
-    --output ./results/seeded_review_simple.json `
-    --mode rag-only `
-    --ollama-model qwen2.5-coder:7b
+# Prerequisites (one-time)
 
-# 2. makes the model review code and produce findings using Agentic RAG;
+# venv already exists; activate it
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+& "..\.venv\Scripts\Activate.ps1"
 
-cd code-review
+# Ollama must be running with the model pulled
+ollama pull qwen2.5-coder:7b
+ollama serve   # or run as a service
 
-python pipeline/review_pipeline.py `
-    --repo ./benchmarks/seeded_repo `
-    --output ./results/seeded_review_agentic.json `
-    --mode rag-only `
-    --rag-mode agentic `
-    --ollama-model qwen2.5-coder:7b
+# One-shot fast mode (skip the LLM entirely)
+1. If you trust the deterministic pre-filter and want results in under a second:
 
-# 3. compares those findings to known-correct answers and prints an accuracy grade.
+python -m pipeline.architectural_rag_agent `
+  --repo "..\post-data-management-back-end-development" `
+  --output results\architectural_review_merged.json --no-llm
 
-# cd code-review; 
-
-python training/evaluate_seeded.py 
-    --review ./results/seeded_review.json 
-    --ground-truth ./benchmarks/ground_truth.json 
-    --report ./results/seeded_eval_report.json
-
-# from code-review/
-python pipeline/review_pipeline.py --repo ./benchmarks/seeded_repo `
-    --output ./results/seeded_review_simple.json `
-    --mode rag-only --ollama-model qwen2.5-coder:7b
-
-python pipeline/review_pipeline.py --repo ./benchmarks/seeded_repo `
-    --output ./results/seeded_review_agentic.json `
-    --mode rag-only --rag-mode agentic --ollama-model qwen2.5-coder:7b
-
-# Then grade both against ground truth
-python training/evaluate_seeded.py --review ./results/seeded_review_simple.json  --ground-truth ./benchmarks/ground_truth.json --report ./results/eval_simple.json
-python training/evaluate_seeded.py --review ./results/seeded_review_agentic.json --ground-truth ./benchmarks/ground_truth.json --report ./results/eval_agentic.json
+  

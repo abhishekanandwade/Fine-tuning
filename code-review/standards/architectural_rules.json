@@ -1,0 +1,60 @@
+{
+  "rules": [
+    {
+      "rule_id": "REPO-001",
+      "category": "architecture",
+      "severity": "HIGH",
+      "applies_to": "repo",
+      "title": "Repository function must contain exactly one database call",
+      "description": "Each repository function must perform exactly one database operation. Multiple DB calls in a single repository function blur responsibilities, make transactions ambiguous, and hide N+1 patterns. Split the function or wrap the calls in a single transaction helper.",
+      "violation_example": "func (r *UserRepo) CreateWithProfile(ctx context.Context, u User) error {\n    _, err := r.db.ExecContext(ctx, insertUserSQL, u.ID, u.Email)  // call 1\n    if err != nil { return err }\n    _, err = r.db.ExecContext(ctx, insertProfileSQL, u.ID, u.Name) // call 2 \u2014 BAD\n    return err\n}",
+      "correct_example": "func (r *UserRepo) Create(ctx context.Context, u User) error {\n    _, err := r.db.ExecContext(ctx, insertUserSQL, u.ID, u.Email)\n    return err\n}\nfunc (r *UserRepo) CreateProfile(ctx context.Context, p Profile) error {\n    _, err := r.db.ExecContext(ctx, insertProfileSQL, p.UserID, p.Name)\n    return err\n}",
+      "db_call_indicators": [
+        "r.db.Query", "r.db.QueryRow", "r.db.Exec", "r.db.SendBatch",
+        "pmr.db.", "ap.db.", "rmr.db.", "ear.db.", "svc.db.", "r.db.",
+        "QueryContext", "ExecContext", "QueryRowContext",
+        "dblib.Insert", "dblib.Update", "dblib.Delete", "dblib.Select", "dblib.SelectRows", "dblib.SelectOne",
+        "psql.Insert", "psql.Update", "psql.Delete", "psql.Select",
+        "batch.Queue", "br.Exec", "br.Query", "br.QueryRow",
+        "tx.Exec", "tx.Query", "tx.QueryRow",
+        "pgx.RowToStructByNameLax"
+      ],
+      "suggested_fix": "Split this function into multiple single-responsibility repository functions, one per DB operation. If the operations are logically atomic, wrap them in a single database transaction and issue the calls through the transaction handle inside a dedicated helper."
+    },
+    {
+      "rule_id": "REPO-002",
+      "category": "performance",
+      "severity": "CRITICAL",
+      "applies_to": "repo",
+      "title": "Database call must not appear inside a for/range loop (N+1 anti-pattern)",
+      "description": "Issuing a database call inside a loop produces N round-trips for N iterations (the N+1 query problem). This causes exponential latency growth and connection-pool exhaustion under load. Batch the identifiers and issue a single bulk query instead.",
+      "violation_example": "func (r *OrderRepo) EnrichItems(ctx context.Context, orders []Order) error {\n    for _, o := range orders {\n        row := r.db.QueryRowContext(ctx, getItemSQL, o.ID) // BAD: N queries\n        row.Scan(&o.Item)\n    }\n    return nil\n}",
+      "correct_example": "func (r *OrderRepo) EnrichItems(ctx context.Context, orders []Order) error {\n    ids := make([]int64, len(orders))\n    for i, o := range orders { ids[i] = o.ID }\n    rows, err := r.db.QueryContext(ctx, getItemsSQL, pq.Array(ids)) // GOOD: single query\n    return err\n}",
+      "db_call_indicators": [
+        "r.db.", "pmr.db.", "ap.db.", "rmr.db.", "ear.db.", "svc.db.",
+        "QueryContext", "ExecContext", "QueryRow", "QueryRowContext",
+        "dblib.Insert", "dblib.Update", "dblib.Select", "dblib.SelectRows",
+        "psql.Insert", "psql.Update", "psql.Select",
+        "batch.Queue", "tx.Exec", "tx.Query"
+      ],
+      "loop_indicators": ["for ", "range "],
+      "suggested_fix": "Collect all required identifiers first, then issue a single bulk query using IN ($1, $2, ...) or pgx SendBatch. Alternatively, use a JOIN or a CTE to retrieve all related data in one round-trip."
+    },
+    {
+      "rule_id": "HANDLER-001",
+      "category": "architecture",
+      "severity": "HIGH",
+      "applies_to": "handler",
+      "title": "Handler must not call more than one repository/service method directly",
+      "description": "HTTP handlers should be thin adapters. Orchestrating multiple repository calls directly in a handler embeds business logic in the transport layer, prevents reuse, complicates testing, and leaks domain concerns. Introduce a service/use-case layer to own the multi-repo orchestration.",
+      "violation_example": "func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {\n    user, _ := h.userRepo.Create(ctx, u)      // repo call 1 \u2014 BAD\n    profile, _ := h.profileRepo.Create(ctx, p) // repo call 2 \u2014 BAD\n    json.NewEncoder(w).Encode(user)\n}",
+      "correct_example": "func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {\n    result, err := h.userService.CreateWithProfile(ctx, req)\n    if err != nil { http.Error(w, err.Error(), 500); return }\n    json.NewEncoder(w).Encode(result)\n}",
+      "repo_call_indicators": [
+        "pmh.svc.", "h.svc.", "h.service.", "h.repo.", ".Repo.",
+        "Service.", "repo.", "Repository.", "Repo.",
+        "userRepo.", "orderRepo.", "store."
+      ],
+      "suggested_fix": "Introduce a service / use-case layer (e.g. UserService.CreateWithProfile) that encapsulates the multi-repository orchestration. The handler calls exactly one service method; the service method calls as many repositories as needed, managing transactions internally."
+    }
+  ]
+}
